@@ -30,9 +30,9 @@ class CustomerController(
         id: String
     ): ResponseEntity<*> {
 
-        return if (customerRepository.existsById(id)) {
-            val customer = customerRepository.findById(id)
-            ResponseEntity.ok().body(customer)
+        val customer = customerRepository.findById(id)
+        return if (customer.isPresent) {
+            ResponseEntity.ok().body(customer.get())
         } else {
             ResponseEntity<Customer>(HttpStatus.NOT_FOUND)
         }
