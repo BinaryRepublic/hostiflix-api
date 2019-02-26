@@ -11,9 +11,9 @@ class Customer(
 	@GeneratedValue(generator = "system-uuid")
 	@GenericGenerator(name = "system-uuid", strategy = "uuid2")
 	val id: String,
-	val firstName: String?,
-	val lastName: String?,
-	val email: String?,
-	val githubUsername: String?,
-	val githubId: String?
+	val firstName: String,
+	val lastName: String,
+	val email: String,
+	val githubUsername: String,
+	val githubId: String
 )

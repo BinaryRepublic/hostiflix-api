@@ -13,6 +13,6 @@ class Branch(
         @ManyToOne(fetch = FetchType.LAZY)
         @JsonBackReference
         var project: Project,
-        val name: String?,
+        val name: String,
         val autoscaling: Boolean
 )

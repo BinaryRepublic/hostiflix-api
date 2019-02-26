@@ -10,11 +10,10 @@ data class Project(
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
     var id: String,
-    val customerId: String?,
-    val name: String?,
-    val repository: String?,
-    val projectType: String?,
-    val location: String?,
+    val customerId: String,
+    val name: String,
+    val repository: String,
+    val projectType: String,
 
     @OneToMany(
         cascade = [CascadeType.ALL],

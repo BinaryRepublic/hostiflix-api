@@ -13,7 +13,6 @@ class ProjectController(
 ) {
 
     @PostMapping
-    @Transactional
     fun create(
         @RequestBody
         newProject : Project

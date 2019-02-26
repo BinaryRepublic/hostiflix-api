@@ -4,7 +4,7 @@ CREATE TABLE customer (
   last_name varchar(255),
   email varchar(255),
   github_username varchar(255),
-  github_Id varchar(255),
+  github_id varchar(255),
   PRIMARY KEY (id)
 );
 
@@ -16,14 +16,13 @@ CREATE TABLE project (
   project_type varchar(255),
   location varchar(255),
   PRIMARY KEY (id),
-  FOREIGN KEY (customer_id) REFERENCES customer(id)
+  CONSTRAINT fk_project_customer_id FOREIGN KEY (customer_id) REFERENCES customer(id)
 );
 
 CREATE TABLE branch (
   id varchar(255) NOT NULL,
   project_id varchar(255) NOT NULL,
   name varchar(255),
-  autoscaling Boolean,
   PRIMARY KEY (id),
-  FOREIGN KEY (project_id) REFERENCES project(id)
+  CONSTRAINT fk_branch_project_id FOREIGN KEY (project_id) REFERENCES project(id)
 );

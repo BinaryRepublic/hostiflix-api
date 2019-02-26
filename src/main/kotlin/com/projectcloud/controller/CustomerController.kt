@@ -10,15 +10,13 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/customers")
-
 class CustomerController(
     private val customerRepository: CustomerRepository
 ) {
 
 
-    @GetMapping("/all")
-    fun findAll(
-    ): ResponseEntity<*> {
+    @GetMapping
+    fun findAll(): ResponseEntity<*> {
 
         val customerList = customerRepository.findAll()
 
@@ -29,19 +27,22 @@ class CustomerController(
     @GetMapping("/{id}")
     fun findById(
         @PathVariable
-            id: String
+        id: String
     ): ResponseEntity<*> {
 
-        val customer = customerRepository.findById(id)
-
-        return ResponseEntity.ok().body(customer)
+        return if (customerRepository.existsById(id)) {
+            val customer = customerRepository.findById(id)
+            ResponseEntity.ok().body(customer)
+        } else {
+            ResponseEntity<Customer>(HttpStatus.NOT_FOUND)
+        }
     }
 
 
     @PostMapping
     fun create(
         @RequestBody
-            newCustomer : Customer
+        newCustomer : Customer
     ): ResponseEntity<*> {
 
         customerRepository.save(newCustomer)
@@ -53,7 +54,7 @@ class CustomerController(
     @PutMapping
     fun update(
         @RequestBody
-            newCustomer: Customer
+        newCustomer: Customer
     ): ResponseEntity<*> {
 
         return if (customerRepository.existsById(newCustomer.id)){
@@ -68,7 +69,7 @@ class CustomerController(
     @DeleteMapping("/{id}")
     fun deleteById(
         @PathVariable
-            id: String
+        id: String
     ): ResponseEntity<*> {
 
         customerRepository.deleteById(id)
