@@ -1,6 +1,5 @@
 package com.projectcloud.controller
 
-import com.projectcloud.entity.Customer
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
