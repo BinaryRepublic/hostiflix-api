@@ -41,9 +41,6 @@ dependencies {
 	implementation "org.springframework.boot:spring-boot-starter-data-jpa"
 	compile group: 'org.postgresql', name: 'postgresql', version: '42.2.5'
 
-	// implementation "mysql:mysql-connector-java:8.0.13"
-	// implementation("com.google.cloud.sql:mysql-socket-factory-connector-j-8:1.0.12")
-
 	compile group: 'org.flywaydb', name: 'flyway-core', version: '5.2.4'
 	compile group: 'com.github.jkcclemens', name: 'khttp', version: '-0.1.0-g94ddc37-15'
 
@@ -52,9 +49,8 @@ dependencies {
 }
 
 flyway {
-	url = "jdbc:postgresql:hostiflix_db"
+	url = "jdbc:postgresql:hostiflix"
 }
-// "jdbc:mysql://google/project_cloud?cloudSqlInstance=project-cloud-231013:europe-west3:project-cloud-database&socketFactory=com.google.cloud.sql.mysql.SocketFactory&useSSL=false"
 
 compileKotlin {
 	kotlinOptions {

@@ -15,5 +15,6 @@ class Customer(
 	val lastName: String,
 	val email: String,
 	val githubUsername: String,
-	val githubId: String
+	val githubId: String,
+	var githubAccesstoken: String
 )

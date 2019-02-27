@@ -5,6 +5,7 @@ CREATE TABLE customer (
   email varchar(255),
   github_username varchar(255),
   github_id varchar(255),
+  github_access_token varchar(255),
   PRIMARY KEY (id)
 );
 
