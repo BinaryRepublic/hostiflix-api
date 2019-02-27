@@ -45,6 +45,8 @@ dependencies {
 	// implementation("com.google.cloud.sql:mysql-socket-factory-connector-j-8:1.0.12")
 
 	compile group: 'org.flywaydb', name: 'flyway-core', version: '5.2.4'
+	compile group: 'com.github.jkcclemens', name: 'khttp', version: '-0.1.0-g94ddc37-15'
+
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
