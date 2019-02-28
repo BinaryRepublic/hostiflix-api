@@ -1,11 +1,10 @@
-package com.projectcloud.controller
+package com.hostiflix.controller
 
-import com.projectcloud.entity.Project
-import com.projectcloud.repository.ProjectRepository
+import com.hostiflix.entity.Project
+import com.hostiflix.repository.ProjectRepository
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import javax.transaction.Transactional
 
 @RestController
 @RequestMapping("/projects")

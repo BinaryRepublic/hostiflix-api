@@ -1,8 +1,8 @@
-package com.projectcloud.controller
+package com.hostiflix.controller
 
 
-import com.projectcloud.entity.Customer
-import com.projectcloud.repository.CustomerRepository
+import com.hostiflix.entity.Customer
+import com.hostiflix.repository.CustomerRepository
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -36,18 +36,6 @@ class CustomerController(
         } else {
             ResponseEntity<Customer>(HttpStatus.NOT_FOUND)
         }
-    }
-
-
-    @PostMapping
-    fun create(
-        @RequestBody
-        newCustomer : Customer
-    ): ResponseEntity<*> {
-
-        customerRepository.save(newCustomer)
-
-        return ResponseEntity.status(201).body(newCustomer)
     }
 
 

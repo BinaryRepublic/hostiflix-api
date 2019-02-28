@@ -1,4 +1,4 @@
-package com.projectcloud.entity
+package com.hostiflix.entity
 
 import org.hibernate.annotations.GenericGenerator
 import javax.persistence.Entity
@@ -16,5 +16,5 @@ class Customer(
 	val email: String,
 	val githubUsername: String,
 	val githubId: String,
-	var githubAccesstoken: String
+	var githubAccessToken: String
 )

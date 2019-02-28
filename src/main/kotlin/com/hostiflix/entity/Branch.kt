@@ -1,4 +1,4 @@
-package com.projectcloud.entity
+package com.hostiflix.entity
 
 import com.fasterxml.jackson.annotation.JsonBackReference
 import org.hibernate.annotations.GenericGenerator

@@ -1,6 +1,6 @@
-package com.projectcloud.repository
+package com.hostiflix.repository
 
-import com.projectcloud.entity.Project
+import com.hostiflix.entity.Project
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 

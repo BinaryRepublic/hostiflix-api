@@ -1,4 +1,4 @@
-package com.projectcloud
+package com.hostiflix
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
