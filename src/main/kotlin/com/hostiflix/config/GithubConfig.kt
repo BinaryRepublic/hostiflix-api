@@ -1,4 +1,4 @@
-package com.hostiflix.controller
+package com.hostiflix.config
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Configuration
