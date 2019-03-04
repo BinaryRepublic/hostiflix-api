@@ -1,6 +1,6 @@
 package com.hostiflix.services
 
-import com.hostiflix.controller.GithubConfig
+import com.hostiflix.config.GithubConfig
 import com.hostiflix.dto.GithubEmailResponseDto
 import com.hostiflix.entity.Customer
 import com.hostiflix.entity.State
@@ -18,16 +18,20 @@ import java.util.*
 
 @Service
 class AuthenticationService (
-    private val githubConfig: GithubConfig,
-    private val customerService: CustomerService,
-    private val stateRepository: StateRepository,
-    private val authenticationRepository: AuthenticationRepository
+        private val githubConfig: GithubConfig,
+        private val customerService: CustomerService,
+        private val stateRepository: StateRepository,
+        private val authenticationRepository: AuthenticationRepository
 ){
 
     val restTemplate = RestTemplate()
 
     val redirectUrlDefault = "http://localhost:8080/redirect"
     var initialState : String? = null
+
+    fun isAuthenticated(accessToken: String): Boolean {
+        return authenticationRepository.existsById(accessToken)
+    }
 
     fun getRedirectUrlGithub() : String {
 

@@ -18,19 +18,6 @@ class ControllerAdvice (
         return true
     }
 
-    /**
-     * We use github's access tokens to manage authentication and therefore save all access tokens from a customer in our "AuthCredentials" table.
-     * As the amount of access tokens one customer can have is limited, we make sure that always the latest access token will be passed to the frontend
-     * for future requests.
-     * This method checks whether the access token inside the request-header (if any) is the latest saved in our db.
-     * If not, it will get the latest access token and add it to the response header.
-     * The (expired) access token used for this request will be deleted.
-     *
-     * @author  Tobias Kemkes
-     * @version 1.0
-     * @since   2019-03-11
-     */
-
     override fun beforeBodyWrite(body: Any?, returnType: MethodParameter, selectedContentType: MediaType, selectedConverterType: Class<out HttpMessageConverter<*>>, request: ServerHttpRequest, response: ServerHttpResponse): Any? {
         request.headers["AccessToken"]?.first()?.let { accessToken ->
 
@@ -38,7 +25,7 @@ class ControllerAdvice (
                 if (!it.latest) {
                     val latestAccessToken = authenticationRepository.findByCustomerIdAndLatest(it.customerId, true).githubAccessToken
                     authenticationRepository.deleteById(it.githubAccessToken)
-                    response.headers.add("Latest-Access-Token", latestAccessToken)
+                    response.headers.add("LatestAccessToken", latestAccessToken)
                 }
             }
         }
