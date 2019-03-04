@@ -9,4 +9,6 @@ interface CustomerRepository : CrudRepository<Customer, String> {
 
     fun existsByGithubId(githubId : String): Boolean
 
+    fun findCustomerByGithubId(githubId: String) : Customer
+
 }
