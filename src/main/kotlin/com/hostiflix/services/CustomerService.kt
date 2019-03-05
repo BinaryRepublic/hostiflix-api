@@ -14,12 +14,6 @@ class CustomerService(
     }
 
 
-    fun createCustomer(newCustomer: Customer): Customer {
-        customerRepository.save(newCustomer)
-
-        return newCustomer
-    }
-
     fun findCustomerByGithubId(githubId: String) : Customer {
         return customerRepository.findCustomerByGithubId(githubId)
     }

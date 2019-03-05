@@ -1,7 +1,6 @@
 CREATE TABLE customer (
   id varchar(36) NOT NULL,
-  first_name varchar(255),
-  last_name varchar(255),
+  name varchar(255),
   email varchar(255),
   github_username varchar(255),
   github_id varchar(255),
