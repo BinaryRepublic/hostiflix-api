@@ -1,0 +1,13 @@
+spring.datasource.url: jdbc:postgresql:hostiflix
+
+spring:
+  datasource:
+    username: postgres
+    password: password
+spring.datasource.driver-class-name: org.postgresql.Driver
+
+spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation: true
+
+spring.application.name: demoservice
+
+noAccessTokenRequiredEndpoints: /auth
