@@ -16,12 +16,23 @@ class AuthFilter (
     @Value("\${noAccessTokenRequiredEndpoints}")
     lateinit var noAccessTokenRequiredEndpoints : List<String>
 
+    /**
+     * This method handles all incoming requests and checks whether it has a valid access token in the header or
+     * if the request was sent to an endpoint which doesn't require authentication.
+     * If one is true, the request get passed along the chain. Otherwise it will return an 403 error.
+     *
+     * @author  Tobias Kemkes
+     * @version 1.0
+     * @since   2019-03-11
+     */
+
     @Throws(IOException::class, ServletException::class)
     override fun doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain) {
         val accessToken : String? = (request as HttpServletRequest).getHeader("AccessToken")
         val path = request.servletPath
 
         var isAuthenticated = accessToken?.takeIf { authenticationService.isAuthenticated(it) } != null
+
         val skipAuthentication = !noAccessTokenRequiredEndpoints.firstOrNull{ path.startsWith(it) }.isNullOrEmpty()
 
         if (skipAuthentication || isAuthenticated ) {

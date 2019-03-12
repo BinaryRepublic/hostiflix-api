@@ -13,7 +13,6 @@ CREATE TABLE project (
   name varchar(255),
   repository varchar(255),
   project_type varchar(255),
-  location varchar(255),
   PRIMARY KEY (id),
   CONSTRAINT fk_project_customer_id FOREIGN KEY (customer_id) REFERENCES customer(id)
 );
@@ -27,9 +26,10 @@ CREATE TABLE branch (
 );
 
 CREATE TABLE authentication (
+  id varchar(255) NOT NULL,
   github_access_token varchar(255),
   customer_id varchar(36) NOT NULL,
   latest Boolean,
-  PRIMARY KEY (github_access_token),
+  PRIMARY KEY (id),
   CONSTRAINT fk_auth_customer_id FOREIGN KEY (customer_id) REFERENCES customer(id)
 );
