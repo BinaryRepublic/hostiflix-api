@@ -6,5 +6,8 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface AuthenticationRepository : CrudRepository<Authentication, String> {
+
     fun findByCustomerIdAndLatest(customerId: String, latest: Boolean): Authentication
+
+    fun existsByGithubAccessToken(githubAccessToken : String) : Boolean
 }

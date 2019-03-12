@@ -2,6 +2,7 @@ package com.hostiflix.controller
 
 import com.hostiflix.entity.Project
 import com.hostiflix.repository.ProjectRepository
+import com.hostiflix.services.ProjectService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -9,25 +10,22 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/projects")
 class ProjectController(
-        private val projectRepository: ProjectRepository
+        private val projectRepository: ProjectRepository,
+        private val projectService: ProjectService
 ) {
 
-    @GetMapping("/all/{customerId}")
-    fun findAllProjectsByCustomerId(
-            @PathVariable
-            customerId: String
-    ): ResponseEntity<*> {
+    @GetMapping
+    fun findAll(): ResponseEntity<*> {
 
-        val projects = projectRepository.findByCustomerId(customerId)
+        val projects = projectRepository.findAll()
 
-        return ResponseEntity.ok().body(projects)
+        return ResponseEntity.ok().body(hashMapOf("projects" to projects))
     }
-
 
     @GetMapping("/{id}")
     fun findProjectById(
-            @PathVariable
-            id: String
+        @PathVariable
+        id: String
     ): ResponseEntity<*> {
 
         val project = projectRepository.findById(id)
@@ -42,10 +40,10 @@ class ProjectController(
         newProject : Project
     ): ResponseEntity<*> {
 
-        newProject.branches.forEach { it.project = newProject }
+        projectService.assignProjectToAllBranches(newProject)
         projectRepository.save(newProject)
 
-        return  ResponseEntity.status(201).body(newProject)
+        return ResponseEntity.status(201).body(newProject)
     }
 
 

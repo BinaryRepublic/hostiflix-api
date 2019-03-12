@@ -11,3 +11,14 @@ spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation: true
 spring.application.name: demoservice
 
 noAccessTokenRequiredEndpoints: /auth
+
+jedisConFactory:
+  hostname: localhost
+  port: 6379
+
+defaultRedirectUrl: http://localhost:8080/auth/redirect
+
+githubRedirectUrl: https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${defaultRedirectUrl}&state={state}&scope={scope}
+
+githubGetAccessTokenUrl: https://github.com/login/oauth/access_token?client_id=${GITHUB_CLIENT_ID}&client_secret=${GITHUB_CLIENT_SECRET}&code={code}&redirect_uri=${defaultRedirectUrl}&state={state}
+

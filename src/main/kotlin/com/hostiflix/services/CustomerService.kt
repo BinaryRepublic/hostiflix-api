@@ -9,7 +9,7 @@ class CustomerService(
         private val customerRepository: CustomerRepository
 ) {
 
-    fun checkGithubId(githubId : String) : Boolean {
+    fun existsByGithubId(githubId : String) : Boolean {
         return customerRepository.existsByGithubId(githubId)
     }
 
