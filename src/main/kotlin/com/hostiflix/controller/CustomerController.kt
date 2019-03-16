@@ -1,67 +1,57 @@
 package com.hostiflix.controller
 
-
 import com.hostiflix.entity.Customer
-import com.hostiflix.repository.CustomerRepository
-import org.springframework.http.HttpStatus
+import com.hostiflix.services.CustomerService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-
 
 @RestController
 @RequestMapping("/customers")
 class CustomerController(
-    private val customerRepository: CustomerRepository
+    private val customerService: CustomerService
 ) {
-
 
     @GetMapping
     fun findAll(): ResponseEntity<*> {
+        val customerList = customerService.findAllCustomers()
 
-        val customerList = customerRepository.findAll()
-
-        return ResponseEntity.ok().body(customerList)
+        return ResponseEntity.ok().body(hashMapOf("customers" to customerList))
     }
-
 
     @GetMapping("/{id}")
     fun findById(
         @PathVariable
         id: String
     ): ResponseEntity<*> {
+        val customer = customerService.findCustomerById(id)
 
-        val customer = customerRepository.findById(id)
-        return if (customer.isPresent) {
-            ResponseEntity.ok().body(customer.get())
+        return if (customer !== null) {
+            ResponseEntity.ok().body(customer)
         } else {
-            ResponseEntity<Customer>(HttpStatus.NOT_FOUND)
+            ResponseEntity.badRequest().body(hashMapOf("error" to "Customer ID not found"))
         }
     }
-
 
     @PutMapping
     fun update(
         @RequestBody
         newCustomer: Customer
     ): ResponseEntity<*> {
-
-        return if (customerRepository.existsById(newCustomer.id)){
-            customerRepository.save(newCustomer)
+        return if (customerService.existsById(newCustomer.id)){
+            customerService.createCustomer(newCustomer)
             ResponseEntity.ok().body(newCustomer)
         } else {
-            ResponseEntity<Customer>(HttpStatus.BAD_REQUEST)
+            ResponseEntity.badRequest().body(hashMapOf("error" to "Customer ID not found"))
         }
     }
-
 
     @DeleteMapping("/{id}")
     fun deleteById(
         @PathVariable
         id: String
-    ): ResponseEntity<*> {
+    ): ResponseEntity<Void> {
+        customerService.deleteCustomer(id)
 
-        customerRepository.deleteById(id)
-
-        return ResponseEntity<Customer>(HttpStatus.NO_CONTENT)
+        return ResponseEntity.noContent().build()
     }
 }

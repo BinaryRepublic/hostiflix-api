@@ -45,6 +45,7 @@ dependencies {
 	implementation "redis.clients:jedis:2.9.0"
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation("com.nhaarman:mockito-kotlin:1.6.0")
 }
 
 flyway {

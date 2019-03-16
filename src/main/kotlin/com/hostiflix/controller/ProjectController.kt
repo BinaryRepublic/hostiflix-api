@@ -10,16 +10,14 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/projects")
 class ProjectController(
-        private val projectRepository: ProjectRepository,
         private val projectService: ProjectService
 ) {
 
     @GetMapping
     fun findAll(): ResponseEntity<*> {
+        val projectList = projectService.findAllProjects()
 
-        val projects = projectRepository.findAll()
-
-        return ResponseEntity.ok().body(hashMapOf("projects" to projects))
+        return ResponseEntity.ok().body(hashMapOf("projects" to projectList))
     }
 
     @GetMapping("/{id}")
@@ -27,50 +25,43 @@ class ProjectController(
         @PathVariable
         id: String
     ): ResponseEntity<*> {
-
-        val project = projectRepository.findById(id)
+        val project = projectService.findProjectById(id)
 
         return ResponseEntity.ok().body(project)
     }
-
 
     @PostMapping
     fun create(
         @RequestBody
         newProject : Project
     ): ResponseEntity<*> {
-
         projectService.assignProjectToAllBranches(newProject)
-        projectRepository.save(newProject)
 
-        return ResponseEntity.status(201).body(newProject)
+        val createdProject = projectService.createProject(newProject)
+
+        return ResponseEntity.status(201).body(createdProject)
     }
-
 
     @PutMapping
     fun update(
         @RequestBody
         newProject: Project
     ): ResponseEntity<*> {
-
-        return if (projectRepository.existsById(newProject.id)){
-            projectRepository.save(newProject)
+        return if (projectService.existsById(newProject.id)){
+            projectService.createProject(newProject)
             ResponseEntity.ok().body(newProject)
         } else {
-            ResponseEntity<Project>(HttpStatus.BAD_REQUEST)
+            ResponseEntity.badRequest().body(hashMapOf("error" to "Project ID not found"))
         }
     }
-
 
     @DeleteMapping("/{id}")
     fun deleteById(
         @PathVariable
         id: String
-    ): ResponseEntity<*> {
+    ): ResponseEntity<Void> {
+        projectService.deleteProject(id)
 
-        projectRepository.deleteById(id)
-
-        return ResponseEntity<Project>(HttpStatus.NO_CONTENT)
+        return ResponseEntity.noContent().build()
     }
-
 }
