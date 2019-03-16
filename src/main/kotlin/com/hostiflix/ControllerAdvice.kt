@@ -19,7 +19,7 @@ class ControllerAdvice (
     }
 
     /**
-     * We use github's access tokens to manage authentication and therefore save all access tokens from a customer in our "Authentication" table.
+     * We use github's access tokens to manage authentication and therefore save all access tokens from a customer in our "AuthCredentials" table.
      * As the amount of access tokens one customer can have is limited, we make sure that always the latest access token will be passed to the frontend
      * for future requests.
      * This method checks whether the access token inside the request-header (if any) is the latest saved in our db.

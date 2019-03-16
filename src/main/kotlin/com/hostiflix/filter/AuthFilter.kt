@@ -30,9 +30,7 @@ class AuthFilter (
     override fun doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain) {
         val accessToken : String? = (request as HttpServletRequest).getHeader("AccessToken")
         val path = request.servletPath
-
         var isAuthenticated = accessToken?.takeIf { authenticationService.isAuthenticated(it) } != null
-
         val skipAuthentication = !noAccessTokenRequiredEndpoints.firstOrNull{ path.startsWith(it) }.isNullOrEmpty()
 
         if (skipAuthentication || isAuthenticated ) {

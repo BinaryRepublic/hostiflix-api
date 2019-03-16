@@ -7,5 +7,7 @@ import org.springframework.stereotype.Repository
 @Repository
 interface ProjectRepository : CrudRepository<Project, String> {
 
+    override fun findAll() : List<Project>
+
     fun findByCustomerId(customerId : String): List<Project>
 }

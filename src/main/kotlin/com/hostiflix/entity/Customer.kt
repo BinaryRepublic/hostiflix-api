@@ -7,12 +7,17 @@ import javax.persistence.Id
 
 @Entity
 class Customer(
+	var name: String,
+	var email: String,
+	var githubUsername: String,
+	val githubId: String
+){
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@GenericGenerator(name = "system-uuid", strategy = "uuid2")
-	val id: String,
-	val name: String,
-	val email: String,
-	val githubUsername: String,
-	val githubId: String
-)
+	lateinit var id: String
+
+	override fun toString(): String {
+		return "{\"id\" : \"$id\", \"name\" : \"$name\", \"email\" : \"$email\", \"githubUsername\" : \"$githubUsername\", \"githubId\" : \"$githubId\"}"
+	}
+}

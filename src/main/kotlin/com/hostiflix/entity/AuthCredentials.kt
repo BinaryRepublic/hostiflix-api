@@ -6,12 +6,13 @@ import javax.persistence.GeneratedValue
 import javax.persistence.Id
 
 @Entity
-class Authentication(
-    @Id
-    @GeneratedValue(generator = "system-uuid")
-    @GenericGenerator(name = "system-uuid", strategy = "uuid2")
-    val id: String,
+class AuthCredentials(
     val githubAccessToken: String,
     val customerId: String,
     var latest: Boolean
-)
+) {
+    @Id
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid2")
+    lateinit var id: String
+}
