@@ -1,4 +1,4 @@
-package com.projectcloud
+package com.hostiflix
 
 import org.junit.Test
 import org.junit.runner.RunWith

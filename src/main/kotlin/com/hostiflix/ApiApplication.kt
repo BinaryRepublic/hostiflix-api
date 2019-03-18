@@ -1,4 +1,4 @@
-package com.projectcloud
+package com.hostiflix
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -9,4 +9,3 @@ class ApiApplication
 fun main(args: Array<String>) {
 	runApplication<ApiApplication>(*args)
 }
-
