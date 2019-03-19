@@ -1,5 +1,6 @@
 package com.hostiflix.services
 
+import com.hostiflix.config.GithubConfig
 import com.hostiflix.dto.GithubCustomerDto
 import com.hostiflix.entity.Customer
 import com.hostiflix.entity.GithubApplicationScope
@@ -19,23 +20,15 @@ class AuthenticationService (
         private val authenticationRepository: AuthenticationRepository,
         private val githubLoginStateRepository: GithubLoginStateRepository,
         private val customerService: CustomerService,
-        private val githubWs: GithubWs
+        private val githubWs: GithubWs,
+        private val githubConfig: GithubConfig
 ){
     val restTemplate = RestTemplate()
-
-    @Value("\${github.login.base}")
-    lateinit var githubLoginBase : String
-
-    @Value("\${github.login.redirect}")
-    lateinit var githubLoginRedirect : String
-
-    @Value("\${github.login.getAccessToken}")
-    lateinit var githubLoginGetAccessToken : String
 
     fun buildNewRedirectUrlForGithub() : String {
 
         /* No Logic - mock necessary */
-        val githubRedirectUrl = githubLoginBase + githubLoginRedirect
+        val githubRedirectUrl = githubConfig.loginBase + githubConfig.loginRedirect
 
         /* No Logic - mock necessary */
         val state = createAndStoreNewGithubState()
@@ -76,7 +69,7 @@ class AuthenticationService (
 
     fun getAccessTokenFromGithub(code: String, state: String) : String {
 
-        val url = githubLoginBase + githubLoginGetAccessToken
+        val url = githubConfig.loginBase + githubConfig.loginGetAccessToken
             .replace("{code}", code)
             .replace("{state}", state)
 
