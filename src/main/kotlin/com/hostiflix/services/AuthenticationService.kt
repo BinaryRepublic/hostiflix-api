@@ -6,20 +6,20 @@ import com.hostiflix.entity.GithubApplicationScope
 import com.hostiflix.entity.GithubLoginState
 import com.hostiflix.entity.AuthCredentials
 import com.hostiflix.repository.AuthenticationRepository
-import com.hostiflix.repository.StateRepository
+import com.hostiflix.repository.GithubLoginStateRepository
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
-import com.hostiflix.webservice.GithubWs
+import com.hostiflix.webservices.GithubWs
 
 @Service
 class AuthenticationService (
-    private val authenticationRepository: AuthenticationRepository,
-    private val stateRepository: StateRepository,
-    private val customerService: CustomerService,
-    private val githubWs: GithubWs
+        private val authenticationRepository: AuthenticationRepository,
+        private val githubLoginStateRepository: GithubLoginStateRepository,
+        private val customerService: CustomerService,
+        private val githubWs: GithubWs
 ){
     val restTemplate = RestTemplate()
 
@@ -34,29 +34,31 @@ class AuthenticationService (
 
     fun buildNewRedirectUrlForGithub() : String {
 
+        /* No Logic - mock necessary */
         val githubRedirectUrl = githubLoginBase + githubLoginRedirect
 
+        /* No Logic - mock necessary */
         val state = createAndStoreNewGithubState()
+        /* No Logic - mock necessary */
         val scope = listOf(GithubApplicationScope.REPO, GithubApplicationScope.USER)
 
         return githubRedirectUrl
             .replace("{state}", state)
             .replace("{scope}", scope.joinToString(","))
-
     }
 
     fun createAndStoreNewGithubState() : String {
         val newState = GithubLoginState()
 
-        return stateRepository.save(newState).id
+        return githubLoginStateRepository.save(newState).id
     }
 
     fun authenticateOnGithubAndReturnAccessToken(code : String, state : String) : String? {
-        if (!stateRepository.existsById(state)) {
+        if (!githubLoginStateRepository.existsById(state)) {
             return null
         }
 
-        stateRepository.deleteById(state)
+        githubLoginStateRepository.deleteById(state)
 
         val accessToken = getAccessTokenFromGithub(code, state)
         val githubCustomer = githubWs.getCustomer(accessToken)
@@ -85,7 +87,7 @@ class AuthenticationService (
             object : ParameterizedTypeReference<Map<String, String>>() {}
         )
 
-        return response.body!!["access_token"]!!
+        return response.body!!.getValue("access_token")
     }
 
     fun createAndStoreNewCustomer(customer : GithubCustomerDto, primaryEmail : String) {

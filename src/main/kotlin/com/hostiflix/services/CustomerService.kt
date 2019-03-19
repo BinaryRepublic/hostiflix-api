@@ -10,7 +10,10 @@ class CustomerService(
 ) {
     fun findAllCustomers() : List<Customer> = customerRepository.findAll().toList()
 
-    fun findCustomerById(id: String): Customer? = customerRepository.findById(id).takeIf { it.isPresent }?.get()
+    fun findCustomerById(id: String): Customer? {
+        val customer = customerRepository.findById(id)
+        return customer.takeIf { it.isPresent }?.get()
+    }
 
     fun createCustomer(customer: Customer) : Customer? = customerRepository.save(customer)
 
@@ -18,11 +21,7 @@ class CustomerService(
 
     fun deleteCustomer(id: String) = customerRepository.deleteById(id)
 
-    fun existsByGithubId(githubId : String) : Boolean {
-        return customerRepository.existsByGithubId(githubId)
-    }
+    fun existsByGithubId(githubId : String) : Boolean  = customerRepository.existsByGithubId(githubId)
 
-    fun findCustomerByGithubId(githubId: String) : Customer {
-        return customerRepository.findCustomerByGithubId(githubId)
-    }
+    fun findCustomerByGithubId(githubId: String) : Customer = customerRepository.findCustomerByGithubId((githubId))
 }

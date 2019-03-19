@@ -1,4 +1,4 @@
-package com.hostiflix.webservice
+package com.hostiflix.webservices
 
 import com.hostiflix.dto.GithubCustomerDto
 import com.hostiflix.dto.GithubEmailResponseDto

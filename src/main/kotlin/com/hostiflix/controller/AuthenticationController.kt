@@ -12,9 +12,9 @@ class AuthenticationController (
 
     @GetMapping("/login")
     fun buildNewRedirectUrlForGithub(): ResponseEntity<*> {
-        val redirectUrlGithub = authenticationService.buildNewRedirectUrlForGithub()
+        val githubRedirectUrl = authenticationService.buildNewRedirectUrlForGithub()
 
-        return ResponseEntity.ok().body(hashMapOf("redirectUrlGithub" to redirectUrlGithub))
+        return ResponseEntity.ok().body(hashMapOf("redirectUrlGithub" to githubRedirectUrl))
     }
 
     @GetMapping("/redirect")

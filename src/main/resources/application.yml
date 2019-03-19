@@ -27,3 +27,9 @@ github:
     base: https://api.github.com/
     user: user
     emails: user/emails
+
+org:
+  springframework:
+    context:
+      support:
+        PropertySourcesPlaceholderConfigurer:
