@@ -1,1 +1,1 @@
-# hostiflix-project-service
+# hostiflix_api
