@@ -25,11 +25,14 @@ class CustomerServiceTest {
 
     @Test
     fun `should return customer by id`() {
-
         /* Given */
         val id = "id"
-        val customer = Customer("name1", "email1", "githubUsername1", "githubId1")
-
+        val customer = Customer(
+            "name1",
+            "email1",
+            "githubUsername1",
+            "githubId1"
+        )
         given(customerRepository.findById(id)).willReturn(Optional.of(customer))
 
         /* When */
@@ -37,15 +40,12 @@ class CustomerServiceTest {
 
         /* Then */
         assertThat(returnedCustomer).isEqualTo(customer)
-
     }
 
     @Test
     fun `should return null when customer id is not found`() {
-
         /* Given */
         val id = "id"
-
         given(customerRepository.findById(id)).willReturn(Optional.empty())
 
         /* When */

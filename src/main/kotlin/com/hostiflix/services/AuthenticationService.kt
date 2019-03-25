@@ -8,31 +8,20 @@ import com.hostiflix.entity.GithubLoginState
 import com.hostiflix.entity.AuthCredentials
 import com.hostiflix.repository.AuthenticationRepository
 import com.hostiflix.repository.GithubLoginStateRepository
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.core.ParameterizedTypeReference
-import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Service
-import org.springframework.web.client.RestTemplate
 import com.hostiflix.webservices.GithubWs
 
 @Service
 class AuthenticationService (
-        private val authenticationRepository: AuthenticationRepository,
-        private val githubLoginStateRepository: GithubLoginStateRepository,
-        private val customerService: CustomerService,
-        private val githubWs: GithubWs,
-        private val githubConfig: GithubConfig
+    private val authenticationRepository: AuthenticationRepository,
+    private val githubLoginStateRepository: GithubLoginStateRepository,
+    private val customerService: CustomerService,
+    private val githubWs: GithubWs,
+    private val githubConfig: GithubConfig
 ){
-    val restTemplate = RestTemplate()
-
     fun buildNewRedirectUrlForGithub() : String {
-
-        /* No Logic - mock necessary */
         val githubRedirectUrl = githubConfig.loginBase + githubConfig.loginRedirect
-
-        /* No Logic - mock necessary */
         val state = createAndStoreNewGithubState()
-        /* No Logic - mock necessary */
         val scope = listOf(GithubApplicationScope.REPO, GithubApplicationScope.USER)
 
         return githubRedirectUrl
@@ -53,7 +42,7 @@ class AuthenticationService (
 
         githubLoginStateRepository.deleteById(state)
 
-        val accessToken = getAccessTokenFromGithub(code, state)
+        val accessToken = githubWs.getAccessToken(code, state)
         val githubCustomer = githubWs.getCustomer(accessToken)
 
         if (!customerService.existsByGithubId(githubCustomer.id)) {
@@ -65,22 +54,6 @@ class AuthenticationService (
         createAndStoreNewAuthCredentials(githubCustomer.id, accessToken)
 
         return accessToken
-    }
-
-    fun getAccessTokenFromGithub(code: String, state: String) : String {
-
-        val url = githubConfig.loginBase + githubConfig.loginGetAccessToken
-            .replace("{code}", code)
-            .replace("{state}", state)
-
-        val response = restTemplate.exchange(
-            url,
-            HttpMethod.POST,
-            null,
-            object : ParameterizedTypeReference<Map<String, String>>() {}
-        )
-
-        return response.body!!.getValue("access_token")
     }
 
     fun createAndStoreNewCustomer(customer : GithubCustomerDto, primaryEmail : String) {

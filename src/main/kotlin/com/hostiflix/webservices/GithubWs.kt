@@ -1,8 +1,9 @@
 package com.hostiflix.webservices
 
+import com.hostiflix.config.GithubConfig
+import com.hostiflix.dto.GithubAccessTokenDto
 import com.hostiflix.dto.GithubCustomerDto
 import com.hostiflix.dto.GithubEmailResponseDto
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -11,28 +12,35 @@ import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 
 @Service
-class GithubWs {
+class GithubWs(
+    private val githubConfig: GithubConfig,
+    private val restTemplate: RestTemplate
+) {
 
-    @Value("\${github.api.base}")
-    lateinit var githubApiBase : String
+    fun getAccessToken(code: String, state: String) : String {
+        val url = githubConfig.loginBase + githubConfig.loginGetAccessToken
+            .replace("{code}", code)
+            .replace("{state}", state)
 
-    @Value("\${github.api.user}")
-    lateinit var githubApiUser : String
+        val response = restTemplate.exchange(
+            url,
+            HttpMethod.POST,
+            null,
+            GithubAccessTokenDto::class.java
+        )
 
-    @Value("\${github.api.emails}")
-    lateinit var githubApiEmails : String
-
-    private val restTemplate = RestTemplate()
+        return response.body!!.accessToken
+    }
 
     fun getCustomer(accessToken: String): GithubCustomerDto {
         val headers = HttpHeaders()
         headers.setBearerAuth(accessToken)
 
         val response = restTemplate.exchange(
-                githubApiBase + githubApiUser,
-                HttpMethod.GET,
-                HttpEntity<Any>(headers),
-                GithubCustomerDto::class.java
+            githubConfig.apiBase + githubConfig.apiUser,
+            HttpMethod.GET,
+            HttpEntity<Any>(headers),
+            GithubCustomerDto::class.java
         )
 
         return response.body!!
@@ -43,10 +51,10 @@ class GithubWs {
         headers.setBearerAuth(accessToken)
 
         val customerEmails = restTemplate.exchange(
-                githubApiBase + githubApiEmails,
-                HttpMethod.GET,
-                HttpEntity<Any>(headers),
-                object : ParameterizedTypeReference<List<GithubEmailResponseDto>>() {}
+            githubConfig.apiBase + githubConfig.apiEmails,
+            HttpMethod.GET,
+            HttpEntity<Any>(headers),
+            object : ParameterizedTypeReference<List<GithubEmailResponseDto>>() {}
         )
 
         return customerEmails.body!!.first { it.primary }.email

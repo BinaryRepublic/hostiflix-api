@@ -16,8 +16,4 @@ class Customer(
 	@GeneratedValue(generator = "system-uuid")
 	@GenericGenerator(name = "system-uuid", strategy = "uuid2")
 	lateinit var id: String
-
-	override fun toString(): String {
-		return "{\"id\" : \"$id\", \"name\" : \"$name\", \"email\" : \"$email\", \"githubUsername\" : \"$githubUsername\", \"githubId\" : \"$githubId\"}"
-	}
 }

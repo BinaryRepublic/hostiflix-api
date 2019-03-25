@@ -5,6 +5,12 @@ spring:
     password: password
     driver-class-name: org.postgresql.Driver
 
+  second-datasource:
+    url:
+    username:
+    password:
+    driver-class-name:
+
   jpa.properties.hibernate.jdbc.lob.non_contextual_creation: true
 
   application:
@@ -27,9 +33,3 @@ github:
     base: https://api.github.com/
     user: user
     emails: user/emails
-
-org:
-  springframework:
-    context:
-      support:
-        PropertySourcesPlaceholderConfigurer:

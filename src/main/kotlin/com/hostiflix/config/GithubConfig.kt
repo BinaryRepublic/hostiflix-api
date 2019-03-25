@@ -12,4 +12,11 @@ class GithubConfig {
     lateinit var loginRedirect : String
 
     lateinit var loginGetAccessToken : String
+
+    lateinit var apiBase : String
+
+    lateinit var apiUser : String
+
+    lateinit var apiEmails : String
+
 }
