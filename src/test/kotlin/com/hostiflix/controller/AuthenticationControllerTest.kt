@@ -1,6 +1,5 @@
-package com.hostiflix
+package com.hostiflix.controller
 
-import com.hostiflix.controller.AuthenticationController
 import com.hostiflix.services.AuthenticationService
 import com.nhaarman.mockito_kotlin.given
 import org.hamcrest.Matchers.`is`
@@ -18,7 +17,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-
 
 @RunWith(MockitoJUnitRunner::class)
 @WebMvcTest
@@ -57,33 +55,33 @@ class AuthenticationControllerTest {
     @Test
     fun `should return access token`() {
         /* Given */
-        val githubLoginCode = "githubLoginCode"
-        val githubLoginState = "githubLoginState"
+        val code = "code"
+        val state = "state"
         val accessToken = "accessToken"
-        given(authenticationService.authenticateOnGithubAndReturnAccessToken(githubLoginCode,githubLoginState)).willReturn(accessToken)
+        given(authenticationService.authenticateOnGithubAndReturnAccessToken(code,state)).willReturn(accessToken)
 
         /* When, Then */
         mockMvc
-            .perform(get("/auth/redirect")
-                .param("code", githubLoginCode)
-                .param("state", githubLoginState))
+            .perform(get("/auth/getAccessToken")
+                .param("code", code)
+                .param("state", state))
             .andDo(print())
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.accessToken", `is` (accessToken)))
     }
 
     @Test
-    fun `should return 400 if access token is null`() {
+    fun `should return error 400 if access token is null`() {
         /* Given */
-        val githubLoginCode = "githubLoginCode"
-        val githubLoginState = "githubLoginState"
-        given(authenticationService.authenticateOnGithubAndReturnAccessToken(githubLoginCode,githubLoginState)).willReturn(null)
+        val code = "code"
+        val state = "state"
+        given(authenticationService.authenticateOnGithubAndReturnAccessToken(code,state)).willReturn(null)
 
         /* When, Then */
         mockMvc
-            .perform(get("/auth/redirect")
-                .param("code", githubLoginCode)
-                .param("state", githubLoginState))
+            .perform(get("/auth/getAccessToken")
+                .param("code", code)
+                .param("state", state))
             .andDo(print())
             .andExpect(status().isBadRequest)
             .andExpect(jsonPath("$.error", `is` ("states don't match")))

@@ -25,7 +25,7 @@ class ProjectController(
     ): ResponseEntity<*> {
         val project = projectService.findProjectById(id)
 
-        return if (project !== null) {
+        return if (project != null) {
             ResponseEntity.ok().body(project)
         } else {
             ResponseEntity.badRequest().body(hashMapOf("error" to "Project ID not found"))
@@ -48,7 +48,7 @@ class ProjectController(
         @RequestBody
         newProject: Project
     ): ResponseEntity<*> {
-        return if (projectService.existsById(newProject.id)){
+        return if (projectService.existsById(newProject.id!!)){
             projectService.createProject(newProject)
             ResponseEntity.ok().body(newProject)
         } else {

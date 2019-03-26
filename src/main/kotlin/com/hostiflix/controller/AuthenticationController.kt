@@ -17,7 +17,7 @@ class AuthenticationController (
         return ResponseEntity.ok().body(hashMapOf("redirectUrlGithub" to githubRedirectUrl))
     }
 
-    @GetMapping("/redirect")
+    @GetMapping("/getAccessToken")
     fun authenticateOnGithubAndReturnAccessToken(
         @RequestParam
         code: String,

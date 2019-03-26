@@ -6,8 +6,12 @@ import javax.persistence.*
 
 @Entity
 data class Project(
+    @Id
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid2")
+    var id: String? = null,
     val customerId: String,
-    val name: String,
+    var name: String,
     val repository: String,
     val projectType: String,
 
@@ -19,9 +23,4 @@ data class Project(
     )
     @JsonManagedReference
     var branches: List<Branch>
-){
-    @Id
-    @GeneratedValue(generator = "system-uuid")
-    @GenericGenerator(name = "system-uuid", strategy = "uuid2")
-    lateinit var id: String
-}
+)

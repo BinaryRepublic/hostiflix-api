@@ -22,7 +22,7 @@ jedisConFactory:
   hostname: localhost
   port: 6379
 
-defaultRedirectUrl: http://localhost:8080/auth/redirect
+defaultRedirectUrl: http://localhost:3000/github-redirect
 
 github:
   login:

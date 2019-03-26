@@ -1,11 +1,10 @@
-package com.hostiflix
+package com.hostiflix.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.hostiflix.controller.CustomerController
 import com.hostiflix.entity.Customer
 import com.hostiflix.services.CustomerService
+import com.hostiflix.support.MockData
 import com.nhaarman.mockito_kotlin.given
-import io.restassured.config.JsonConfig
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.hasSize
 import org.junit.Before
@@ -27,7 +26,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 
 @RunWith(SpringJUnit4ClassRunner::class)
-@ContextConfiguration(classes = [JsonConfig::class, JacksonAutoConfiguration::class])
+@ContextConfiguration(classes = [JacksonAutoConfiguration::class])
 @WebMvcTest
 class CustomerControllerTest {
 
@@ -53,19 +52,8 @@ class CustomerControllerTest {
 	@Test
 	fun `should return a list of all customers`() {
         /* Given */
-        val customer1 = Customer(
-            "name1",
-            "email1",
-            "githubUsername1",
-            "githubId1"
-        ).apply { id = "randomString1"}
-
-        val customer2 = Customer(
-            "name2",
-            "email2",
-            "githubUsername2",
-            "githubId2"
-        ).apply { id = "randomString2" }
+        val customer1 = MockData.customer("1")
+        val customer2 = MockData.customer("2")
         val customerList = listOf(customer1, customer2)
         given(customerService.findAllCustomers()).willReturn(customerList)
 
@@ -87,43 +75,34 @@ class CustomerControllerTest {
             .andExpect(jsonPath("$.customers[1].githubId", `is`(customer2.githubId)))
     }
 
+
     @Test
     fun `should return a customer by Id`() {
         /* Given */
-        val customer3 =  Customer(
-            "name3",
-            "email3",
-            "githubUsername3",
-            "githubId3"
-        ).apply { id = "randomString3" }
-        given(customerService.findCustomerById(customer3.id)).willReturn(customer3)
+        val customer =  MockData.customer("3")
+        given(customerService.findCustomerById(customer.id!!)).willReturn(customer)
 
         /* When, Then */
         mockMvc
-            .perform(get("/customers/${customer3.id}"))
+            .perform(get("/customers/${customer.id}"))
             .andDo(print())
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$.id", `is`(customer3.id)))
-            .andExpect(jsonPath("$.name", `is`(customer3.name)))
-            .andExpect(jsonPath("$.email", `is`(customer3.email)))
-            .andExpect(jsonPath("$.githubUsername", `is`(customer3.githubUsername)))
-            .andExpect(jsonPath("$.githubId", `is`(customer3.githubId)))
+            .andExpect(jsonPath("$.id", `is`(customer.id)))
+            .andExpect(jsonPath("$.name", `is`(customer.name)))
+            .andExpect(jsonPath("$.email", `is`(customer.email)))
+            .andExpect(jsonPath("$.githubUsername", `is`(customer.githubUsername)))
+            .andExpect(jsonPath("$.githubId", `is`(customer.githubId)))
     }
 
     @Test
-    fun `should return 400 when no customer with given Id is found (findById)`() {
+    fun `should return error 400 when no customer with given Id is found (findById)`() {
         /* Given */
-        val customer4 =  Customer(
-            "name4",
-            "email4",
-            "githubUsername4",
-            "githubId4"
-        ).apply { id = "randomString4" }
-        given(customerService.findCustomerById(customer4.id)).willReturn(null)
+        val customer =  MockData.customer("4")
+        given(customerService.findCustomerById(customer.id!!)).willReturn(null)
 
         /* When, Then */
         mockMvc
-            .perform(get("/customers/${customer4.id}"))
+            .perform(get("/customers/${customer.id}"))
             .andDo(print())
             .andExpect(status().isBadRequest)
             .andExpect(jsonPath("$.error", `is`("Customer ID not found")))
@@ -132,21 +111,12 @@ class CustomerControllerTest {
     @Test
     fun `should return updated customer`() {
         /* Given */
-        val initialCustomer =  Customer(
-            "name5",
-            "email5",
-            "githubUsername5",
-            "githubId5"
-        ).apply { id = "randomString5" }
-
-        val newCustomer =  Customer(
-            "updated",
-            "updated",
-            "updated",
-            "githubId5"
-        ).apply { id = initialCustomer.id }
-        given(customerService.existsById(newCustomer.id)).willReturn(true)
-
+        val initialCustomer =  MockData.customer("5")
+        val newCustomer =  MockData.customer("5").apply {
+            name = "updated"
+            email = "updated"
+        }
+        given(customerService.existsById(newCustomer.id!!)).willReturn(true)
         val body = objectMapper.writeValueAsString(newCustomer)
 
         /* When, Then */
@@ -166,16 +136,10 @@ class CustomerControllerTest {
     }
 
     @Test
-    fun `should return 400 when no customer with given Id is found (update)`() {
+    fun `should return error 400 when no customer with given Id is found (update)`() {
         /* Given */
-        val newCustomer =  Customer(
-            "name6",
-            "email6",
-            "githubUsername6",
-            "githubId6"
-        ).apply { id = "randomString6" }
-        given(customerService.existsById(newCustomer.id)).willReturn(false)
-
+        val newCustomer =  MockData.customer("6")
+        given(customerService.existsById(newCustomer.id!!)).willReturn(false)
         val body = objectMapper.writeValueAsString(newCustomer)
 
         /* When, Then */
@@ -192,7 +156,7 @@ class CustomerControllerTest {
     }
 
     @Test
-    fun `should return 204 no content`() {
+    fun `should return error 204 no content`() {
         /* When, Then */
         mockMvc
             .perform(

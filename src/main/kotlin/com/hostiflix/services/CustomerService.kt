@@ -8,20 +8,20 @@ import org.springframework.stereotype.Service
 class CustomerService(
         private val customerRepository: CustomerRepository
 ) {
-    fun findAllCustomers() : List<Customer> = customerRepository.findAll().toList()
+    fun findAllCustomers() = customerRepository.findAll().toList()
 
     fun findCustomerById(id: String): Customer? {
         val customer = customerRepository.findById(id)
         return customer.takeIf { it.isPresent }?.get()
     }
 
-    fun createCustomer(customer: Customer) : Customer? = customerRepository.save(customer)
+    fun createCustomer(customer: Customer) = customerRepository.save(customer)
 
     fun existsById(id: String) = customerRepository.existsById(id)
 
     fun deleteCustomer(id: String) = customerRepository.deleteById(id)
 
-    fun existsByGithubId(githubId : String) : Boolean  = customerRepository.existsByGithubId(githubId)
+    fun existsByGithubId(githubId : String) = customerRepository.existsByGithubId(githubId)
 
-    fun findCustomerByGithubId(githubId: String) : Customer = customerRepository.findCustomerByGithubId((githubId))
+    fun findCustomerByGithubId(githubId: String) = customerRepository.findCustomerByGithubId((githubId))
 }

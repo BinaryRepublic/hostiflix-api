@@ -6,13 +6,13 @@ import javax.persistence.*
 
 @Entity
 class Branch(
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonBackReference
-    var project: Project,
-    val name: String
-){
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
-    lateinit var id: String
+    var id: String? = null,
+    val name: String
+){
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
+    lateinit var project: Project
 }

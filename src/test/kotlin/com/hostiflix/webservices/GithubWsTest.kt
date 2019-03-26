@@ -1,17 +1,16 @@
-package com.hostiflix
+package com.hostiflix.webservices
 
 import com.hostiflix.config.GithubConfig
 import com.hostiflix.dto.GithubAccessTokenDto
 import com.hostiflix.dto.GithubCustomerDto
 import com.hostiflix.dto.GithubEmailResponseDto
-import com.hostiflix.webservices.GithubWs
+import com.hostiflix.support.MockData
 import com.nhaarman.mockito_kotlin.*
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.springframework.boot.test.context.SpringBootTest
 import org.junit.Before
 import org.springframework.http.HttpMethod
 import org.springframework.web.client.RestTemplate
@@ -21,7 +20,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.springframework.core.ParameterizedTypeReference
 
 @RunWith(MockitoJUnitRunner::class)
-@SpringBootTest
 class GithubWsTest {
 
     @Mock
@@ -51,10 +49,12 @@ class GithubWsTest {
         val response = ResponseEntity(GithubAccessTokenDto(accessToken), HttpStatus.OK)
 
         given(restTemplate.exchange(
-            "http://github.com/access_token?code=code&state=state",
+            "http://github.com/access_token?code={code}&state={state}",
             HttpMethod.POST,
             null,
-            GithubAccessTokenDto::class.java
+            GithubAccessTokenDto::class.java,
+            code,
+            state
         )).willReturn(response)
 
         /* When */
@@ -68,11 +68,7 @@ class GithubWsTest {
     fun `should return customer`() {
         /* Given */
         val accessToken = "accessToken"
-        val githubCustomer = GithubCustomerDto(
-            "id1",
-            "name1",
-            "login1"
-        )
+        val githubCustomer = MockData.githubCustomerDto("1")
         val response = ResponseEntity(githubCustomer, HttpStatus.OK)
 
         given(restTemplate.exchange(
@@ -95,8 +91,8 @@ class GithubWsTest {
     fun `should return customer primary email address`() {
         /* Given */
         val accessToken = "accessToken"
-        val githubEmail1 = GithubEmailResponseDto().apply { email = "email1" }
-        val githubEmail2 = GithubEmailResponseDto().apply { email = "email2" }.apply { primary = true }
+        val githubEmail1 = MockData.githubEmailResponseDto("1")
+        val githubEmail2 = MockData.githubEmailResponseDto("2").apply { primary = true }
         val listOfGithubEmails = listOf(githubEmail1, githubEmail2)
         val response = ResponseEntity(listOfGithubEmails, HttpStatus.OK)
 

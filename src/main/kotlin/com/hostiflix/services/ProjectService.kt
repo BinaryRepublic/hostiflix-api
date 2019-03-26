@@ -9,7 +9,7 @@ class ProjectService (
     private val projectRepository: ProjectRepository
 ) {
 
-    fun findAllProjects() : List<Project> = projectRepository.findAll().toList()
+    fun findAllProjects() = projectRepository.findAll().toList()
 
     fun findProjectById(id: String): Project? {
         val project = projectRepository.findById(id)

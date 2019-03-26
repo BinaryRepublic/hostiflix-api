@@ -1,9 +1,7 @@
-package com.hostiflix
+package com.hostiflix.services
 
-import com.hostiflix.entity.Branch
-import com.hostiflix.entity.Project
 import com.hostiflix.repository.ProjectRepository
-import com.hostiflix.services.ProjectService
+import com.hostiflix.support.MockData
 import com.nhaarman.mockito_kotlin.given
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -27,23 +25,12 @@ class ProjectServiceTest {
     @Test
     fun `should return project by id`() {
         /* Given */
-        val projectId = "projectId"
-        val project = Project(
-            "customerId1",
-            "name1",
-            "repository1",
-            "projectType1",
-            emptyList()
-        )
-        val branch1 = Branch(project, "name1").apply { id ="randomString1" }
-        val branch2 = Branch(project, "name2").apply { id ="randomString2" }
+        val project = MockData.project("1")
 
-        val listOfBranches = listOf(branch1, branch2)
-        project.apply { branches = listOfBranches }
-        given(projectRepository.findById(projectId)).willReturn(Optional.of(project))
+        given(projectRepository.findById(project.id!!)).willReturn(Optional.of(project))
 
         /* When */
-        val returnedProject = projectService.findProjectById(projectId)
+        val returnedProject = projectService.findProjectById(project.id!!)
 
         /* Then */
         assertThat(returnedProject).isEqualTo(project)

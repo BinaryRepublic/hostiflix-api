@@ -57,19 +57,22 @@ class AuthenticationService (
     }
 
     fun createAndStoreNewCustomer(customer : GithubCustomerDto, primaryEmail : String) {
-        val newCustomer = Customer(customer.name, primaryEmail, customer.login, customer.id)
+        val newCustomer = Customer(null, customer.name, primaryEmail, customer.login, customer.id)
 
         customerService.createCustomer(newCustomer)
     }
 
     fun setAllExistingAccessTokensToLatestFalse() {
         val listOfAuthCredentials = authenticationRepository.findAll()
-        listOfAuthCredentials.forEach { it.latest = false}
+        listOfAuthCredentials.forEach {
+            it.latest = false
+            authenticationRepository.save(it)
+        }
     }
 
     fun createAndStoreNewAuthCredentials(githubId: String, accessToken: String?) {
         val customer = customerService.findCustomerByGithubId(githubId)
-        val newAuthCredentials = AuthCredentials(accessToken!!, customer.id,  true)
+        val newAuthCredentials = AuthCredentials(null, accessToken!!, customer.id!!,  true)
 
         authenticationRepository.save(newAuthCredentials)
     }

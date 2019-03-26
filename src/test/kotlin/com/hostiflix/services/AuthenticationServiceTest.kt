@@ -1,14 +1,13 @@
 package com.hostiflix
 
 import com.hostiflix.config.GithubConfig
-import com.hostiflix.dto.GithubCustomerDto
 import com.hostiflix.entity.AuthCredentials
-import com.hostiflix.entity.Customer
 import com.hostiflix.entity.GithubLoginState
 import com.hostiflix.repository.AuthenticationRepository
 import com.hostiflix.repository.GithubLoginStateRepository
 import com.hostiflix.services.AuthenticationService
 import com.hostiflix.services.CustomerService
+import com.hostiflix.support.MockData
 import com.hostiflix.webservices.GithubWs
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.given
@@ -18,14 +17,10 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.springframework.boot.test.context.SpringBootTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.mockito.junit.MockitoJUnitRunner
-import org.springframework.boot.SpringBootConfiguration
 
-@SpringBootTest
-@SpringBootConfiguration
 @RunWith(MockitoJUnitRunner::class)
 class AuthenticationServiceTest {
 
@@ -69,14 +64,14 @@ class AuthenticationServiceTest {
     @Test
     fun `should create and store new github state`() {
         /* Given */
-        val testStateId = "id"
-        given(githubLoginStateRepository.save<GithubLoginState>(any())).willReturn(GithubLoginState(testStateId))
+        val id = "id"
+        given(githubLoginStateRepository.save<GithubLoginState>(any())).willReturn(GithubLoginState(id))
 
         /* When */
         val stateId = authenticationService.createAndStoreNewGithubState()
 
         /* Then */
-        assertThat(stateId).isEqualTo(testStateId)
+        assertThat(stateId).isEqualTo(id)
     }
 
     @Test
@@ -84,13 +79,14 @@ class AuthenticationServiceTest {
         /* Given */
         val code = "code"
         val state = "state"
-        given(githubLoginStateRepository.existsById(any())).willReturn(false)
+        given(githubLoginStateRepository.existsById(state)).willReturn(false)
 
         /* When */
         val accessTokenResult = authenticationService.authenticateOnGithubAndReturnAccessToken(code, state)
 
         /* Then */
         assertThat(accessTokenResult).isEqualTo(null)
+        verify(githubLoginStateRepository).existsById(state)
     }
 
     @Test
@@ -99,20 +95,11 @@ class AuthenticationServiceTest {
         val code = "code"
         val state = "state"
         val accessToken = "accessToken"
-        val githubCustomer = GithubCustomerDto(
-            "id1",
-            "name1",
-            "login1"
-        )
+        val githubCustomer = MockData.githubCustomerDto("1")
         val githubCustomerPrimaryEmail = "primaryEmail1"
-        val customer = Customer(
-            "name1",
-            "email1",
-            "githubUserName1",
-            "githubId1"
-        ).apply { id = "randomString" }
+        val customer = MockData.customer("1")
 
-        given(githubLoginStateRepository.existsById(any())).willReturn(true)
+        given(githubLoginStateRepository.existsById(state)).willReturn(true)
         given(githubWs.getAccessToken(code, state)).willReturn(accessToken)
         given(githubWs.getCustomer(accessToken)).willReturn(githubCustomer)
         given(customerService.existsByGithubId(githubCustomer.id)).willReturn(false)
@@ -123,6 +110,7 @@ class AuthenticationServiceTest {
         val accessTokenResult = authenticationService.authenticateOnGithubAndReturnAccessToken(code, state)
 
         /* Then */
+        verify(githubLoginStateRepository).existsById(state)
         verify(githubLoginStateRepository).deleteById(any())
         verify(customerService).createCustomer(any())
         verify(authenticationRepository).findAll()
@@ -136,17 +124,8 @@ class AuthenticationServiceTest {
         val code = "code"
         val state = "state"
         val accessToken = "accessToken"
-        val githubCustomer = GithubCustomerDto(
-            "id1",
-            "name1",
-            "login1"
-        )
-        val customer = Customer(
-            "name1",
-            "email1",
-            "githubUserName1",
-            "githubId1"
-        ).apply { id = "randomString" }
+        val githubCustomer = MockData.githubCustomerDto("2")
+        val customer = MockData.customer("2")
 
         given(githubLoginStateRepository.existsById(any())).willReturn(true)
         given(githubWs.getAccessToken(code, state)).willReturn(accessToken)
@@ -167,20 +146,16 @@ class AuthenticationServiceTest {
     @Test
     fun `should create and store new customer`() {
         /* Given */
-        val githubCustomer = GithubCustomerDto(
-            "id2",
-            "name2",
-            "login2"
-        )
-        val primaryEmail = "primaryEmail2"
+        val githubCustomer = MockData.githubCustomerDto("3")
+        val githubCustomerPrimaryEmail = "primaryEmail2"
 
         /* When */
-        authenticationService.createAndStoreNewCustomer(githubCustomer, primaryEmail)
+        authenticationService.createAndStoreNewCustomer(githubCustomer, githubCustomerPrimaryEmail)
 
         /* Then */
         verify(customerService).createCustomer(check {
             assertThat(it.name).isEqualTo(githubCustomer.name)
-            assertThat(it.email).isEqualTo(primaryEmail)
+            assertThat(it.email).isEqualTo(githubCustomerPrimaryEmail)
             assertThat(it.githubUsername).isEqualTo(githubCustomer.login)
             assertThat(it.githubId).isEqualTo(githubCustomer.id)
         })
@@ -189,16 +164,8 @@ class AuthenticationServiceTest {
     @Test
     fun `should set all access tokens to latest false`() {
         /* Given */
-        val authCredentials1 = AuthCredentials(
-            "githubAccessToken1",
-            "customerId1",
-            false
-        )
-        val authCredentials2 = AuthCredentials(
-            "githubAccessToken2",
-            "customerId2",
-            true
-        )
+        val authCredentials1 = MockData.authCredentials("1")
+        val authCredentials2 = MockData.authCredentials("2").apply { latest = true }
         val listOfAuthCredentials = listOf(authCredentials1, authCredentials2)
         given(authenticationRepository.findAll()).willReturn(listOfAuthCredentials)
 
@@ -212,20 +179,19 @@ class AuthenticationServiceTest {
     @Test
     fun `should create and store new auth credentials`() {
         /* Given */
-        val githubId = "githubId2"
+        val githubId = "githubId"
         val accessToken = "accessToken"
-        val customer = Customer(
-            "name2",
-            "email2",
-            "githubUsername2",
-            "githubId2"
-        ).apply { id = "id2" }
+        val customer = MockData.customer("3")
         given(customerService.findCustomerByGithubId(githubId)).willReturn(customer)
 
         /* When */
         authenticationService.createAndStoreNewAuthCredentials(githubId, accessToken)
 
         /* Then */
-        verify(authenticationRepository).save<AuthCredentials>(any())
+        verify(authenticationRepository).save<AuthCredentials>(check {
+            assertThat(it.githubAccessToken).isEqualTo(accessToken)
+            assertThat(it.customerId).isEqualTo(customer.id)
+            assertThat(it.latest).isEqualTo(true)
+        })
     }
 }

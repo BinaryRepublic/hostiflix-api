@@ -19,14 +19,14 @@ class GithubWs(
 
     fun getAccessToken(code: String, state: String) : String {
         val url = githubConfig.loginBase + githubConfig.loginGetAccessToken
-            .replace("{code}", code)
-            .replace("{state}", state)
 
         val response = restTemplate.exchange(
             url,
             HttpMethod.POST,
             null,
-            GithubAccessTokenDto::class.java
+            GithubAccessTokenDto::class.java,
+            code,
+            state
         )
 
         return response.body!!.accessToken

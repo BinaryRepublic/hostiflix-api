@@ -1,13 +1,12 @@
-package com.hostiflix
+package com.hostiflix.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.hostiflix.controller.ProjectController
-import com.hostiflix.entity.Branch
 import com.hostiflix.entity.Project
 import com.hostiflix.services.ProjectService
+import com.hostiflix.support.MockData
+import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.given
 import com.nhaarman.mockito_kotlin.verify
-import io.restassured.config.JsonConfig
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.hasSize
 import org.junit.Before
@@ -29,7 +28,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 
 @RunWith(SpringJUnit4ClassRunner::class)
-@ContextConfiguration(classes = [JsonConfig::class, JacksonAutoConfiguration::class])
+@ContextConfiguration(classes = [JacksonAutoConfiguration::class])
 @WebMvcTest
 class ProjectControllerTest {
 
@@ -48,37 +47,15 @@ class ProjectControllerTest {
     @Before
     fun init() {
         mockMvc = MockMvcBuilders
-            .standaloneSetup(projectController)
-            .build()
+                .standaloneSetup(projectController)
+                .build()
     }
 
     @Test
     fun `should return a list of all projects`() {
         /* Given */
-        val project1 = Project(
-            "customerId1",
-            "name1",
-            "repository1",
-            "projectType1",
-            emptyList()
-        ).apply { id = "randomString1" }
-        val branch1 = Branch(project1, "name1").apply { id ="randomString1" }
-        val branch2 = Branch(project1, "name2").apply { id ="randomString2" }
-        val listOfBranches1 = listOf(branch1, branch2)
-        project1.apply { branches = listOfBranches1 }
-
-        val project2 = Project(
-            "customerId2",
-            "name2",
-            "repository2",
-            "projectType2",
-            emptyList()
-        ).apply { id = "randomString2" }
-        val branch3 = Branch(project1, "name3").apply { id ="randomString3" }
-        val branch4 = Branch(project1, "name4").apply { id ="randomString4" }
-        val listOfBranches2 = listOf(branch3, branch4)
-        project2.apply { branches = listOfBranches2 }
-
+        val project1 = MockData.project("1")
+        val project2 = MockData.project("2")
         val projectList = listOf(project1, project2)
         given(projectService.findAllProjects()).willReturn(projectList)
 
@@ -111,50 +88,34 @@ class ProjectControllerTest {
     @Test
     fun `should return a project by Id`() {
         /* Given */
-        val project3 =  Project(
-            "customerId3",
-            "name3",
-            "repository3",
-            "projectType3",
-            emptyList()
-        ).apply { id = "randomString3" }
-        val branch3 = Branch(project3, "name3").apply { id ="randomString3" }
-        val branch4 = Branch(project3, "name4").apply { id ="randomString4" }
-        val listOfBranches3 = listOf(branch3, branch4)
-        project3.apply { branches = listOfBranches3 }
-        given(projectService.findProjectById(project3.id)).willReturn(project3)
+        val project = MockData.project("3")
+        given(projectService.findProjectById(project.id!!)).willReturn(project)
 
         /* When, Then */
         mockMvc
-            .perform(get("/projects/${project3.id}"))
+            .perform(get("/projects/${project.id}"))
             .andDo(print())
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$.id", `is`(project3.id)))
-            .andExpect(jsonPath("$.customerId", `is`(project3.customerId)))
-            .andExpect(jsonPath("$.name", `is`(project3.name)))
-            .andExpect(jsonPath("$.repository", `is`(project3.repository)))
-            .andExpect(jsonPath("$.projectType", `is`(project3.projectType)))
-            .andExpect(jsonPath("$.branches[0].id", `is`(project3.branches[0].id)))
-            .andExpect(jsonPath("$.branches[0].name", `is`(project3.branches[0].name)))
-            .andExpect(jsonPath("$.branches[1].id", `is`(project3.branches[1].id)))
-            .andExpect(jsonPath("$.branches[1].name", `is`(project3.branches[1].name)))
+            .andExpect(jsonPath("$.id", `is`(project.id)))
+            .andExpect(jsonPath("$.customerId", `is`(project.customerId)))
+            .andExpect(jsonPath("$.name", `is`(project.name)))
+            .andExpect(jsonPath("$.repository", `is`(project.repository)))
+            .andExpect(jsonPath("$.projectType", `is`(project.projectType)))
+            .andExpect(jsonPath("$.branches[0].id", `is`(project.branches[0].id)))
+            .andExpect(jsonPath("$.branches[0].name", `is`(project.branches[0].name)))
+            .andExpect(jsonPath("$.branches[1].id", `is`(project.branches[1].id)))
+            .andExpect(jsonPath("$.branches[1].name", `is`(project.branches[1].name)))
     }
 
     @Test
-    fun `should return 400 when no project with given Id is found (findById)`() {
+    fun `should return error 400 when no project with given Id is found (findById)`() {
         /* Given */
-        val project4 =  Project(
-            "customerId4",
-            "name4",
-            "repository4",
-            "projectType4",
-            emptyList()
-        ).apply { id = "randomString4" }
-        given(projectService.findProjectById(project4.id)).willReturn(null)
+        val project = MockData.project("4")
+        given(projectService.findProjectById(project.id!!)).willReturn(null)
 
         /* When, Then */
         mockMvc
-            .perform(get("/projects/${project4.id}"))
+            .perform(get("/projects/${project.id}"))
             .andDo(print())
             .andExpect(status().isBadRequest)
             .andExpect(jsonPath("$.error", `is`("Project ID not found")))
@@ -163,19 +124,8 @@ class ProjectControllerTest {
     @Test
     fun `should create and return new project`() {
         /* Given */
-        val newProject =  Project(
-            "customerId8",
-            "name8",
-            "repository8",
-            "projectType8",
-            emptyList()
-        ).apply { id = "randomString8" }
-        val branch10 = Branch(newProject, "name10").apply { id = "randomString10" }
-        val branch11 = Branch(newProject, "name11").apply { id = "randomString11" }
-        val listOfBranches7 = listOf(branch10, branch11)
-        newProject.apply { branches = listOfBranches7 }
-
-        given(projectService.createProject(newProject)).willReturn(newProject)
+        val newProject = MockData.project("5")
+        given(projectService.createProject(any())).willReturn(newProject)
         val body = objectMapper.writeValueAsString(newProject)
 
         /* When, Then */
@@ -195,38 +145,18 @@ class ProjectControllerTest {
             .andExpect(jsonPath("$.branches[0].id", `is`(newProject.branches[0].id)))
             .andExpect(jsonPath("$.branches[0].name", `is`(newProject.branches[0].name)))
             .andExpect(jsonPath("$.branches[1].id", `is`(newProject.branches[1].id)))
-            .andExpect(jsonPath("$.branches[1].name", `is`(newProject.branches[0].name)))
-            verify(projectService).assignProjectToAllBranches(newProject)
+            .andExpect(jsonPath("$.branches[1].name", `is`(newProject.branches[1].name)))
+        verify(projectService).assignProjectToAllBranches(any())
     }
 
     @Test
     fun `should return updated project`() {
         /* Given */
-        val initialProject =  Project(
-            "customerId5",
-            "name5",
-            "repository5",
-            "projectType5",
-            emptyList()
-        ).apply { id = "randomString5" }
-        val branch5 = Branch(initialProject, "name5").apply { id = "randomString5" }
-        val branch6 = Branch(initialProject, "name6").apply { id = "randomString6" }
-        val listOfBranches4 = listOf(branch5, branch6)
-        initialProject.apply { branches = listOfBranches4 }
-
-        val newProject =  Project(
-            "customerId5",
-            "updated",
-            "repository5",
-            "projectType5",
-            emptyList()
-        ).apply { id = initialProject.id }
-        val branch7 = Branch(newProject, "name7").apply { id = "randomString7" }
-        val branch8 = Branch(newProject, "name8").apply { id = "randomString8" }
-
-        val listOfBranches5 = listOf(branch7, branch8)
-        newProject.apply { branches = listOfBranches5 }
-        given(projectService.existsById(newProject.id)).willReturn(true)
+        val initialProject = MockData.project("6")
+        val newProject = MockData.project("6").apply {
+            name = "updated"
+        }
+        given(projectService.existsById(newProject.id!!)).willReturn(true)
         val body = objectMapper.writeValueAsString(newProject)
 
         /* When, Then */
@@ -244,29 +174,17 @@ class ProjectControllerTest {
             .andExpect(jsonPath("$.name", `is`(newProject.name)))
             .andExpect(jsonPath("$.repository", `is`(newProject.repository)))
             .andExpect(jsonPath("$.projectType", `is`(newProject.projectType)))
-                /*
             .andExpect(jsonPath("$.branches[0].id", `is`(newProject.branches[0].id)))
             .andExpect(jsonPath("$.branches[0].name", `is`(newProject.branches[0].name)))
             .andExpect(jsonPath("$.branches[1].id", `is`(newProject.branches[1].id)))
-            .andExpect(jsonPath("$.branches[1].name", `is`(newProject.branches[0].name)))
-            */
+            .andExpect(jsonPath("$.branches[1].name", `is`(newProject.branches[1].name)))
     }
 
     @Test
-    fun `should return 400 when no project with given Id is found (update)`() {
+    fun `should return error 400 when no project with given Id is found (update)`() {
         /* Given */
-        val project =  Project(
-            "customerId6",
-            "name6",
-            "repository6",
-            "projectType6",
-            emptyList()
-        ).apply { id = "randomString6" }
-        val branch7 = Branch(project, "name5").apply { id = "randomString7" }
-        val branch8 = Branch(project, "name6").apply { id = "randomString8" }
-        val listOfBranches5 = listOf(branch7, branch8)
-        project.apply { branches = listOfBranches5 }
-        given(projectService.existsById(project.id)).willReturn(false)
+        val project = MockData.project("7")
+        given(projectService.existsById(project.id!!)).willReturn(false)
         val body = objectMapper.writeValueAsString(project)
 
         /* When, Then */
@@ -282,7 +200,7 @@ class ProjectControllerTest {
     }
 
     @Test
-    fun `should return 204 no content`() {
+    fun `should return error 204 no content`() {
         /* When, Then */
         mockMvc
             .perform(
