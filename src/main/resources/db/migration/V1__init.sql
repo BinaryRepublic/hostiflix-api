@@ -25,7 +25,7 @@ CREATE TABLE branch (
   CONSTRAINT fk_branch_project_id FOREIGN KEY (project_id) REFERENCES project(id)
 );
 
-CREATE TABLE authentication (
+CREATE TABLE auth_credentials (
   id varchar(255) NOT NULL,
   github_access_token varchar(255),
   customer_id varchar(36) NOT NULL,

@@ -9,9 +9,10 @@ class Branch(
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
-    val id: String,
+    var id: String? = null,
+    val name: String
+){
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference
-    var project: Project,
-    val name: String
-)
+    lateinit var project: Project
+}

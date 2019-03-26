@@ -9,9 +9,12 @@ class ProjectService (
     private val projectRepository: ProjectRepository
 ) {
 
-    fun findAllProjects() : List<Project> = projectRepository.findAll()
+    fun findAllProjects() = projectRepository.findAll().toList()
 
-    fun findProjectById(id: String): Project? = projectRepository.findById(id).takeIf { it.isPresent }?.get()
+    fun findProjectById(id: String): Project? {
+        val project = projectRepository.findById(id)
+        return project.takeIf { it.isPresent }?.get()
+    }
 
     fun assignProjectToAllBranches(newProject: Project) {
         newProject.branches.forEach { it.project = newProject }

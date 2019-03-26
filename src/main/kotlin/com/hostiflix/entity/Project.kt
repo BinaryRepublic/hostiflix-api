@@ -9,9 +9,9 @@ data class Project(
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
-    var id: String,
+    var id: String? = null,
     val customerId: String,
-    val name: String,
+    var name: String,
     val repository: String,
     val projectType: String,
 
@@ -22,5 +22,5 @@ data class Project(
         mappedBy = "project"
     )
     @JsonManagedReference
-    val branches: List<Branch>
+    var branches: List<Branch>
 )

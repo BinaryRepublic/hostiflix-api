@@ -25,7 +25,7 @@ class CustomerController(
     ): ResponseEntity<*> {
         val customer = customerService.findCustomerById(id)
 
-        return if (customer !== null) {
+        return if (customer != null) {
             ResponseEntity.ok().body(customer)
         } else {
             ResponseEntity.badRequest().body(hashMapOf("error" to "Customer ID not found"))
@@ -37,7 +37,7 @@ class CustomerController(
         @RequestBody
         newCustomer: Customer
     ): ResponseEntity<*> {
-        return if (customerService.existsById(newCustomer.id)){
+        return if (customerService.existsById(newCustomer.id!!)){
             customerService.createCustomer(newCustomer)
             ResponseEntity.ok().body(newCustomer)
         } else {

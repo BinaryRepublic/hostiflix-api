@@ -5,4 +5,4 @@ import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface StateRepository : CrudRepository<GithubLoginState, String>
+interface GithubLoginStateRepository : CrudRepository<GithubLoginState, String>

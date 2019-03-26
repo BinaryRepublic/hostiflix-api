@@ -3,9 +3,9 @@ package com.hostiflix.filter
 import com.hostiflix.services.AuthenticationService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
-import javax.servlet.http.HttpServletRequest
 import java.io.IOException
 import javax.servlet.*
+import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @Component
@@ -28,9 +28,13 @@ class AuthFilter (
 
     @Throws(IOException::class, ServletException::class)
     override fun doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain) {
-        val accessToken : String? = (request as HttpServletRequest).getHeader("AccessToken")
+        if ((request as HttpServletRequest).method == "OPTIONS") {
+            chain.doFilter(request, response)
+            return
+        }
+        val accessToken : String? = request.getHeader("Access-Token")
         val path = request.servletPath
-        var isAuthenticated = accessToken?.takeIf { authenticationService.isAuthenticated(it) } != null
+        val isAuthenticated = accessToken?.takeIf { authenticationService.isAuthenticated(it) } != null
         val skipAuthentication = !noAccessTokenRequiredEndpoints.firstOrNull{ path.startsWith(it) }.isNullOrEmpty()
 
         if (skipAuthentication || isAuthenticated ) {
