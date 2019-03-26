@@ -25,11 +25,9 @@ jedisConFactory:
 defaultRedirectUrl: http://localhost:3000/github-redirect
 
 github:
-  login:
-    base: https://github.com/login/oauth/
-    redirect: authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${defaultRedirectUrl}&state={state}&scope={scope}
-    getAccessToken: access_token?client_id=${GITHUB_CLIENT_ID}&client_secret=${GITHUB_CLIENT_SECRET}&code={code}&redirect_uri=${defaultRedirectUrl}&state={state}
-  api:
-    base: https://api.github.com/
-    user: user
-    emails: user/emails
+  login-base: https://github.com/login/oauth/
+  login-redirect: authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${defaultRedirectUrl}&state={state}&scope={scope}
+  login-get-access-token: access_token?client_id=${GITHUB_CLIENT_ID}&client_secret=${GITHUB_CLIENT_SECRET}&code={code}&redirect_uri=${defaultRedirectUrl}&state={state}
+  api-base: https://api.github.com/
+  api-user: user
+  api-emails: user/emails

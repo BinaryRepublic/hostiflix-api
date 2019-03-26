@@ -6,8 +6,8 @@ import org.springframework.http.MediaType
 import org.springframework.http.converter.HttpMessageConverter
 import org.springframework.http.server.ServerHttpRequest
 import org.springframework.http.server.ServerHttpResponse
-import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice
 import org.springframework.web.bind.annotation.ControllerAdvice
+import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice
 
 @ControllerAdvice
 class ControllerAdvice (
@@ -32,12 +32,12 @@ class ControllerAdvice (
      */
 
     override fun beforeBodyWrite(body: Any?, returnType: MethodParameter, selectedContentType: MediaType, selectedConverterType: Class<out HttpMessageConverter<*>>, request: ServerHttpRequest, response: ServerHttpResponse): Any? {
-        request.headers["AccessToken"]?.first()?.let { accessToken ->
+        request.headers["Access-Token"]?.first()?.let { accessToken ->
 
-            authenticationRepository.findById(accessToken).ifPresent {
+            authenticationRepository.findByGithubAccessToken(accessToken)?.let {
                 if (!it.latest) {
                     val latestAccessToken = authenticationRepository.findByCustomerIdAndLatest(it.customerId, true).githubAccessToken
-                    authenticationRepository.deleteById(it.githubAccessToken)
+                    authenticationRepository.deleteById(it.id!!)
                     response.headers.add("Latest-Access-Token", latestAccessToken)
                 }
             }
