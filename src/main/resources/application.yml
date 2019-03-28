@@ -1,15 +1,9 @@
 spring:
   datasource:
-    url: jdbc:postgresql:hostiflix
-    username: postgres
-    password: password
+    url: "jdbc:postgresql:hostiflix"
+    username: "postgres"
+    password: "password"
     driver-class-name: org.postgresql.Driver
-
-  second-datasource:
-    url:
-    username:
-    password:
-    driver-class-name:
 
   jpa.properties.hibernate.jdbc.lob.non_contextual_creation: true
 
