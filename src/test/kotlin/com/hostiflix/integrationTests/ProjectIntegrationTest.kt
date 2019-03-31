@@ -53,7 +53,7 @@ class ProjectIntegrationTest {
     }
 
     @Test
-    fun `1_should return a list of all projects`() {
+    fun `should return a list of all projects`() {
         val mockProject = MockData.project("1")
         project = projectRepository.save(mockProject)
 
@@ -68,7 +68,7 @@ class ProjectIntegrationTest {
     }
 
     @Test
-    fun `2_should return a project by id`() {
+    fun `should return a project by id`() {
         val mockProject = MockData.project("2")
         project = projectRepository.save(mockProject)
 
@@ -90,7 +90,7 @@ class ProjectIntegrationTest {
     }
 
     @Test
-    fun `3_should return the created project`() {
+    fun `should return the created project`() {
         val newProject = MockData.project("3")
         val body = objectMapper.writeValueAsString(newProject)
 
@@ -115,7 +115,7 @@ class ProjectIntegrationTest {
     }
 
     @Test
-    fun `4_should return updated project`() {
+    fun `should return updated project`() {
         val mockProject = MockData.project("4")
         project = projectRepository.save(mockProject)
         val updatedProject = project.apply {
@@ -147,7 +147,7 @@ class ProjectIntegrationTest {
     }
 
     @Test
-    fun `5_should return no content`() {
+    fun `should return no content`() {
         val mockProject = MockData.project("5")
         project = projectRepository.save(mockProject)
 

@@ -52,7 +52,7 @@ class CustomerIntegrationTest {
     }
 
     @Test
-    fun `1_should return a list of all customers`() {
+    fun `should return a list of all customers`() {
         val mockCustomer = MockData.customer("1")
         customer = customerRepository.save(mockCustomer)
 
@@ -67,7 +67,7 @@ class CustomerIntegrationTest {
     }
 
     @Test
-    fun `2_should return a customer by id`() {
+    fun `should return a customer by id`() {
         val mockCustomer = MockData.customer("2")
         customer = customerRepository.save(mockCustomer)
 
@@ -86,7 +86,7 @@ class CustomerIntegrationTest {
     }
 
     @Test
-    fun `3_should return updated customer`() {
+    fun `should return updated customer`() {
         val mockCustomer = MockData.customer("3")
         customer = customerRepository.save(mockCustomer)
         val updatedCustomer = customer.apply {
@@ -117,7 +117,7 @@ class CustomerIntegrationTest {
     }
 
     @Test
-    fun `4_should return no content`() {
+    fun `should return no content`() {
         val mockCustomer = MockData.customer("4")
         customer = customerRepository.save(mockCustomer)
 
