@@ -1,6 +1,6 @@
 package com.hostiflix.controller
 
-import com.hostiflix.services.AuthenticationService
+import com.hostiflix.service.AuthenticationService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*
 class AuthenticationController (
     private val authenticationService: AuthenticationService
 ){
-
     @GetMapping("/login")
     fun buildNewRedirectUrlForGithub(): ResponseEntity<*> {
         val githubRedirectUrl = authenticationService.buildNewRedirectUrlForGithub()

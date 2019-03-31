@@ -2,7 +2,7 @@ package com.hostiflix.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.hostiflix.entity.Customer
-import com.hostiflix.services.CustomerService
+import com.hostiflix.service.CustomerService
 import com.hostiflix.support.MockData
 import com.nhaarman.mockito_kotlin.given
 import org.hamcrest.Matchers.`is`

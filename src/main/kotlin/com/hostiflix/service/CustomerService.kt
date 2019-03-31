@@ -1,4 +1,4 @@
-package com.hostiflix.services
+package com.hostiflix.service
 
 import com.hostiflix.entity.Customer
 import com.hostiflix.repository.CustomerRepository

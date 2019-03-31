@@ -5,6 +5,7 @@ import com.hostiflix.dto.GithubAccessTokenDto
 import com.hostiflix.dto.GithubCustomerDto
 import com.hostiflix.dto.GithubEmailResponseDto
 import com.hostiflix.support.MockData
+import com.hostiflix.webservice.githubWs.GithubWsImpl
 import com.nhaarman.mockito_kotlin.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -29,7 +30,7 @@ class GithubWsTest {
     private lateinit var githubConfig: GithubConfig
 
     @InjectMocks
-    private lateinit var githubWs: GithubWs
+    private lateinit var githubWs: GithubWsImpl
 
     @Before
     fun setup() {

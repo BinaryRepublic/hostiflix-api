@@ -2,7 +2,7 @@ package com.hostiflix.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.hostiflix.entity.Project
-import com.hostiflix.services.ProjectService
+import com.hostiflix.service.ProjectService
 import com.hostiflix.support.MockData
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.given
@@ -47,8 +47,8 @@ class ProjectControllerTest {
     @Before
     fun init() {
         mockMvc = MockMvcBuilders
-                .standaloneSetup(projectController)
-                .build()
+            .standaloneSetup(projectController)
+            .build()
     }
 
     @Test
