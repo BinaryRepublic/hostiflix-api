@@ -1,7 +1,9 @@
 package com.hostiflix.integrationTests
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.hostiflix.entity.AuthCredentials
 import com.hostiflix.entity.Customer
+import com.hostiflix.repository.AuthCredentialsRepository
 import com.hostiflix.repository.CustomerRepository
 import com.hostiflix.support.MockData
 import io.restassured.RestAssured
@@ -19,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
+import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit4.SpringRunner
 
@@ -26,6 +29,7 @@ import org.springframework.test.context.junit4.SpringRunner
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class CustomerIntegrationTest {
 
     @Autowired
@@ -33,6 +37,9 @@ class CustomerIntegrationTest {
 
     @Autowired
     lateinit var objectMapper: ObjectMapper
+
+    @Autowired
+    private lateinit var authCredentialsRepository: AuthCredentialsRepository
 
     @Value("\${local.server.port}")
     private val serverPort: Int = 0
@@ -44,18 +51,19 @@ class CustomerIntegrationTest {
     fun setUp() {
         RestAssured.port = serverPort
         RestAssured.basePath = "/customers"
+
+        customer = customerRepository.save(MockData.customer("c1"))
+        authCredentialsRepository.save(AuthCredentials("ac1", accessToken, customer.id!!,  true))
     }
 
     @After
     fun clearDatabase() {
+        authCredentialsRepository.deleteAll()
         customerRepository.deleteAll()
     }
 
     @Test
     fun `should return a list of all customers`() {
-        val mockCustomer = MockData.customer("1")
-        customer = customerRepository.save(mockCustomer)
-
         RestAssured
             .given()
             .header("Access-Token", accessToken)
@@ -69,7 +77,7 @@ class CustomerIntegrationTest {
     @Test
     fun `should return a customer by id`() {
         val mockCustomer = MockData.customer("2")
-        customer = customerRepository.save(mockCustomer)
+        val customer = customerRepository.save(mockCustomer)
 
         RestAssured
             .given()
@@ -88,7 +96,7 @@ class CustomerIntegrationTest {
     @Test
     fun `should return updated customer`() {
         val mockCustomer = MockData.customer("3")
-        customer = customerRepository.save(mockCustomer)
+        val customer = customerRepository.save(mockCustomer)
         val updatedCustomer = customer.apply {
             name = "updated"
             email = "updated"
@@ -118,9 +126,6 @@ class CustomerIntegrationTest {
 
     @Test
     fun `should return no content`() {
-        val mockCustomer = MockData.customer("4")
-        customer = customerRepository.save(mockCustomer)
-
         RestAssured
             .given()
             .header("Access-Token", accessToken)

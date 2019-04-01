@@ -9,6 +9,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers.notNullValue
 import org.hamcrest.Matchers.`is`
 import org.junit.After
+import org.junit.AfterClass
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -16,13 +17,14 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
+import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit4.SpringRunner
-import redis.embedded.RedisServer
 
 @RunWith(SpringRunner::class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class AuthenticationIntegrationTest {
 
     @Autowired
@@ -41,13 +43,13 @@ class AuthenticationIntegrationTest {
     fun setUp() {
         RestAssured.port = serverPort
         RestAssured.basePath = "/auth"
-        RedisServer.builder().build()
     }
 
     @After
     fun clearDatabase() {
         githubLoginStateRepository.deleteAll()
         customerRepository.deleteAll()
+        authCredentialsRepository.deleteAll()
     }
 
     @Test

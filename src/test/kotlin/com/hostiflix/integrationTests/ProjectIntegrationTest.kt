@@ -1,8 +1,11 @@
 package com.hostiflix.integrationTests
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.hostiflix.entity.AuthCredentials
 import com.hostiflix.entity.Customer
 import com.hostiflix.entity.Project
+import com.hostiflix.repository.AuthCredentialsRepository
+import com.hostiflix.repository.CustomerRepository
 import com.hostiflix.repository.ProjectRepository
 import com.hostiflix.support.MockData
 import io.restassured.RestAssured
@@ -20,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
+import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit4.SpringRunner
 
@@ -27,10 +31,17 @@ import org.springframework.test.context.junit4.SpringRunner
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class ProjectIntegrationTest {
 
     @Autowired
     private lateinit var projectRepository: ProjectRepository
+
+    @Autowired
+    private lateinit var authCredentialsRepository: AuthCredentialsRepository
+
+    @Autowired
+    private lateinit var customerRepository: CustomerRepository
 
     @Autowired
     lateinit var objectMapper: ObjectMapper
@@ -45,11 +56,16 @@ class ProjectIntegrationTest {
     fun setUp() {
         RestAssured.port = serverPort
         RestAssured.basePath = "/projects"
+
+        val customerId = customerRepository.save(MockData.customer("c1")).id!!
+        authCredentialsRepository.save(AuthCredentials("ac1", accessToken, customerId,  true))
     }
 
     @After
     fun clearDatabase() {
         projectRepository.deleteAll()
+        authCredentialsRepository.deleteAll()
+        customerRepository.deleteAll()
     }
 
     @Test
