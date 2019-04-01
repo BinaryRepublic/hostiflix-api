@@ -1,6 +1,6 @@
 package com.hostiflix
 
-import com.hostiflix.repository.AuthenticationRepository
+import com.hostiflix.repository.AuthCredentialsRepository
 import org.springframework.core.MethodParameter
 import org.springframework.http.MediaType
 import org.springframework.http.converter.HttpMessageConverter
@@ -11,7 +11,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice
 
 @ControllerAdvice
 class ControllerAdvice (
-    private val authenticationRepository: AuthenticationRepository
+    private val authCredentialsRepository: AuthCredentialsRepository
 ) : ResponseBodyAdvice<Any> {
 
     override fun supports(returnType: MethodParameter, converterType: Class<out HttpMessageConverter<*>>): Boolean {
@@ -34,10 +34,10 @@ class ControllerAdvice (
     override fun beforeBodyWrite(body: Any?, returnType: MethodParameter, selectedContentType: MediaType, selectedConverterType: Class<out HttpMessageConverter<*>>, request: ServerHttpRequest, response: ServerHttpResponse): Any? {
         request.headers["Access-Token"]?.first()?.let { accessToken ->
 
-            authenticationRepository.findByGithubAccessToken(accessToken)?.let {
+            authCredentialsRepository.findByGithubAccessToken(accessToken)?.let {
                 if (!it.latest) {
-                    val latestAccessToken = authenticationRepository.findByCustomerIdAndLatest(it.customerId, true).githubAccessToken
-                    authenticationRepository.deleteById(it.id!!)
+                    val latestAccessToken = authCredentialsRepository.findByCustomerIdAndLatest(it.customerId, true).githubAccessToken
+                    authCredentialsRepository.deleteById(it.id!!)
                     response.headers.add("Latest-Access-Token", latestAccessToken)
                 }
             }

@@ -3,12 +3,12 @@ package com.hostiflix
 import com.hostiflix.config.GithubConfig
 import com.hostiflix.entity.AuthCredentials
 import com.hostiflix.entity.GithubLoginState
-import com.hostiflix.repository.AuthenticationRepository
+import com.hostiflix.repository.AuthCredentialsRepository
 import com.hostiflix.repository.GithubLoginStateRepository
-import com.hostiflix.services.AuthenticationService
-import com.hostiflix.services.CustomerService
+import com.hostiflix.service.AuthenticationService
+import com.hostiflix.service.CustomerService
 import com.hostiflix.support.MockData
-import com.hostiflix.webservices.GithubWs
+import com.hostiflix.webservice.githubWs.GithubWsImpl
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.given
 import com.nhaarman.mockito_kotlin.verify
@@ -25,7 +25,7 @@ import org.mockito.junit.MockitoJUnitRunner
 class AuthenticationServiceTest {
 
     @Mock
-    private lateinit var authenticationRepository: AuthenticationRepository
+    private lateinit var authCredentialsRepository: AuthCredentialsRepository
 
     @Mock
     private lateinit var githubLoginStateRepository: GithubLoginStateRepository
@@ -34,7 +34,7 @@ class AuthenticationServiceTest {
     private lateinit var customerService: CustomerService
 
     @Mock
-    private lateinit var githubWs: GithubWs
+    private lateinit var githubWs: GithubWsImpl
 
     @Mock
     private lateinit var githubConfig: GithubConfig
@@ -113,8 +113,8 @@ class AuthenticationServiceTest {
         verify(githubLoginStateRepository).existsById(state)
         verify(githubLoginStateRepository).deleteById(any())
         verify(customerService).createCustomer(any())
-        verify(authenticationRepository).findAll()
-        verify(authenticationRepository).save<AuthCredentials>(any())
+        verify(authCredentialsRepository).findAll()
+        verify(authCredentialsRepository).save<AuthCredentials>(any())
         assertThat(accessTokenResult).isEqualTo(accessToken)
     }
 
@@ -138,8 +138,8 @@ class AuthenticationServiceTest {
 
         /* Then */
         verify(githubLoginStateRepository).deleteById(any())
-        verify(authenticationRepository).findAll()
-        verify(authenticationRepository).save<AuthCredentials>(any())
+        verify(authCredentialsRepository).findAll()
+        verify(authCredentialsRepository).save<AuthCredentials>(any())
         assertThat(accessTokenResult).isEqualTo(accessToken)
     }
 
@@ -167,7 +167,7 @@ class AuthenticationServiceTest {
         val authCredentials1 = MockData.authCredentials("1")
         val authCredentials2 = MockData.authCredentials("2").apply { latest = true }
         val listOfAuthCredentials = listOf(authCredentials1, authCredentials2)
-        given(authenticationRepository.findAll()).willReturn(listOfAuthCredentials)
+        given(authCredentialsRepository.findAll()).willReturn(listOfAuthCredentials)
 
         /* When */
         authenticationService.setAllExistingAccessTokensToLatestFalse()
@@ -188,7 +188,7 @@ class AuthenticationServiceTest {
         authenticationService.createAndStoreNewAuthCredentials(githubId, accessToken)
 
         /* Then */
-        verify(authenticationRepository).save<AuthCredentials>(check {
+        verify(authCredentialsRepository).save<AuthCredentials>(check {
             assertThat(it.githubAccessToken).isEqualTo(accessToken)
             assertThat(it.customerId).isEqualTo(customer.id)
             assertThat(it.latest).isEqualTo(true)

@@ -1,9 +1,10 @@
-package com.hostiflix.webservices
+package com.hostiflix.webservice.githubWs
 
 import com.hostiflix.config.GithubConfig
 import com.hostiflix.dto.GithubAccessTokenDto
 import com.hostiflix.dto.GithubCustomerDto
 import com.hostiflix.dto.GithubEmailResponseDto
+import org.springframework.context.annotation.Profile
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -12,12 +13,13 @@ import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 
 @Service
-class GithubWs(
+@Profile("!test")
+class GithubWsImpl(
     private val githubConfig: GithubConfig,
     private val restTemplate: RestTemplate
-) {
+): GithubWs {
 
-    fun getAccessToken(code: String, state: String) : String {
+    override fun getAccessToken(code: String, state: String) : String {
         val url = githubConfig.loginBase + githubConfig.loginGetAccessToken
 
         val response = restTemplate.exchange(
@@ -32,7 +34,7 @@ class GithubWs(
         return response.body!!.accessToken
     }
 
-    fun getCustomer(accessToken: String): GithubCustomerDto {
+    override fun getCustomer(accessToken: String): GithubCustomerDto {
         val headers = HttpHeaders()
         headers.setBearerAuth(accessToken)
 
@@ -46,7 +48,7 @@ class GithubWs(
         return response.body!!
     }
 
-    fun getCustomerPrimaryEmail(accessToken: String) : String {
+    override fun getCustomerPrimaryEmail(accessToken: String) : String {
         val headers = HttpHeaders()
         headers.setBearerAuth(accessToken)
 

@@ -1,7 +1,7 @@
 package com.hostiflix.controller
 
 import com.hostiflix.entity.Project
-import com.hostiflix.services.ProjectService
+import com.hostiflix.service.ProjectService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 

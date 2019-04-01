@@ -1,4 +1,4 @@
-package com.hostiflix.services
+package com.hostiflix.service
 
 import com.hostiflix.config.GithubConfig
 import com.hostiflix.dto.GithubCustomerDto
@@ -6,18 +6,18 @@ import com.hostiflix.entity.Customer
 import com.hostiflix.entity.GithubApplicationScope
 import com.hostiflix.entity.GithubLoginState
 import com.hostiflix.entity.AuthCredentials
-import com.hostiflix.repository.AuthenticationRepository
+import com.hostiflix.repository.AuthCredentialsRepository
 import com.hostiflix.repository.GithubLoginStateRepository
+import com.hostiflix.webservice.githubWs.GithubWs
 import org.springframework.stereotype.Service
-import com.hostiflix.webservices.GithubWs
 
 @Service
 class AuthenticationService (
-    private val authenticationRepository: AuthenticationRepository,
-    private val githubLoginStateRepository: GithubLoginStateRepository,
-    private val customerService: CustomerService,
-    private val githubWs: GithubWs,
-    private val githubConfig: GithubConfig
+        private val authCredentialsRepository: AuthCredentialsRepository,
+        private val githubLoginStateRepository: GithubLoginStateRepository,
+        private val customerService: CustomerService,
+        private val githubWs: GithubWs,
+        private val githubConfig: GithubConfig
 ){
     fun buildNewRedirectUrlForGithub() : String {
         val githubRedirectUrl = githubConfig.loginBase + githubConfig.loginRedirect
@@ -63,10 +63,10 @@ class AuthenticationService (
     }
 
     fun setAllExistingAccessTokensToLatestFalse() {
-        val listOfAuthCredentials = authenticationRepository.findAll()
+        val listOfAuthCredentials = authCredentialsRepository.findAll()
         listOfAuthCredentials.forEach {
             it.latest = false
-            authenticationRepository.save(it)
+            authCredentialsRepository.save(it)
         }
     }
 
@@ -74,10 +74,10 @@ class AuthenticationService (
         val customer = customerService.findCustomerByGithubId(githubId)
         val newAuthCredentials = AuthCredentials(null, accessToken!!, customer.id!!,  true)
 
-        authenticationRepository.save(newAuthCredentials)
+        authCredentialsRepository.save(newAuthCredentials)
     }
 
     fun isAuthenticated(accessToken: String): Boolean {
-        return authenticationRepository.existsByGithubAccessToken(accessToken)
+        return authCredentialsRepository.existsByGithubAccessToken(accessToken)
     }
 }

@@ -1,12 +1,14 @@
-package com.hostiflix.services
+package com.hostiflix.service
 
 import com.hostiflix.entity.Project
 import com.hostiflix.repository.ProjectRepository
+import com.hostiflix.webservice.githubWs.GithubWs
 import org.springframework.stereotype.Service
 
 @Service
 class ProjectService (
     private val projectRepository: ProjectRepository
+
 ) {
 
     fun findAllProjects() = projectRepository.findAll().toList()

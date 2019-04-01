@@ -1,6 +1,6 @@
 package com.hostiflix.controller
 
-import com.hostiflix.services.AuthenticationService
+import com.hostiflix.service.AuthenticationService
 import com.nhaarman.mockito_kotlin.given
 import org.hamcrest.Matchers.`is`
 import org.junit.Before

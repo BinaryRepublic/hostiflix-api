@@ -1,6 +1,6 @@
 package com.hostiflix.filter
 
-import com.hostiflix.services.AuthenticationService
+import com.hostiflix.service.AuthenticationService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.io.IOException
@@ -32,6 +32,7 @@ class AuthFilter (
             chain.doFilter(request, response)
             return
         }
+
         val accessToken : String? = request.getHeader("Access-Token")
         val path = request.servletPath
         val isAuthenticated = accessToken?.takeIf { authenticationService.isAuthenticated(it) } != null

@@ -5,7 +5,7 @@ import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface AuthenticationRepository : CrudRepository<AuthCredentials, String> {
+interface AuthCredentialsRepository : CrudRepository<AuthCredentials, String> {
 
     fun findByCustomerIdAndLatest(customerId: String, latest: Boolean): AuthCredentials
 
