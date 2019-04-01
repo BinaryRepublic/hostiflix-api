@@ -13,7 +13,7 @@ Project {
 Branch {
 	id: String,
 	name: String,
-	domain: String?,
+	subDomain: String,
 	jobs: [ Job ]
 }
 
