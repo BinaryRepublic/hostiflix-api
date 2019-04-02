@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory
-
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration
 
 @Configuration
 class RedisConfig {
@@ -18,10 +18,8 @@ class RedisConfig {
 
     @Bean
     fun jedisConnectionFactory(): JedisConnectionFactory {
-        val jedisConFactory = JedisConnectionFactory()
-        hostname
-        port
-        return jedisConFactory
+        val redisStandaloneConfiguration = RedisStandaloneConfiguration(hostname, port.toInt())
+        return JedisConnectionFactory(redisStandaloneConfiguration)
     }
 
     @Bean
