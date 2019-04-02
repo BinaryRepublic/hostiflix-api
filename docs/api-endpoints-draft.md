@@ -3,10 +3,9 @@
 ```
 Project {
 	id: String,
-	customerId: String,
 	name: String,
 	repository: String,
-	projectType: String,
+	projectType: ENUM ( NODEJS )
 	branches: [ Branch ]
 }
 
@@ -19,7 +18,7 @@ Branch {
 
 Job {
 	id: String,
-	status: String,
+	status: ENUM ( BUILD_SCHEDULED; BUILD_CANCELLED; DEPLOYMENT_PENDING; DEPLOYMENT_SUCCESSFUL; DEPLOYMENT_FAILED ),
 	createdAt: DateTime,
 	finishedAt: DateTime
 }
