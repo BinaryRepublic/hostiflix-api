@@ -14,7 +14,7 @@ spring:
   profiles:
     active: development
   datasource:
-    url: jdbc:postgresql:hostiflix;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:postgresql:hostiflix
     username: postgres
     password: password
     driver-class-name: org.postgresql.Driver
