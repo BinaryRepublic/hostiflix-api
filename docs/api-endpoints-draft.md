@@ -80,7 +80,7 @@ res: HTTP 200 {
 ```
 
 ```
-GET /github/repos/{repoId}/branches
+GET /github/repos/{repoOwner}/{repoName}/branches
 
 res: HTTP 200 {
 	"branches": [ GithubBranch ]
