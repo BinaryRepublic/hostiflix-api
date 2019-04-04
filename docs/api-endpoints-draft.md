@@ -3,13 +3,14 @@
 ```
 Project {
 	id: String,
-	projectHash: String,
+	hash: String,
 	name: String,
-	projectType: ENUM ( NODEJS ),
+	type: ENUM ( NODEJS ),
 	startCode: String,
 	buildCode: String,
 	repositoryId: String,
-	branches: [ Branch ]
+	branches: [ Branch ],
+	createdAt: Datetime
 }
 
 Branch {
