@@ -26,6 +26,7 @@ jobs:
           paths:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
+            - setup_remote_docker
       - run: gradle build
       - run: gradle test
       - persist_to_workspace:

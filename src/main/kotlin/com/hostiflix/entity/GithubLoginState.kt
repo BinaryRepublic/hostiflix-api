@@ -1,7 +1,7 @@
 package com.hostiflix.entity
 
-import java.io.Serializable
 import org.springframework.data.redis.core.RedisHash
+import java.io.Serializable
 import java.util.*
 
 @RedisHash

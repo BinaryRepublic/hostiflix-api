@@ -2,10 +2,10 @@ package com.hostiflix.service
 
 import com.hostiflix.config.GithubConfig
 import com.hostiflix.dto.GithubCustomerDto
+import com.hostiflix.entity.AuthCredentials
 import com.hostiflix.entity.Customer
 import com.hostiflix.entity.GithubApplicationScope
 import com.hostiflix.entity.GithubLoginState
-import com.hostiflix.entity.AuthCredentials
 import com.hostiflix.repository.AuthCredentialsRepository
 import com.hostiflix.repository.GithubLoginStateRepository
 import com.hostiflix.webservice.githubWs.GithubWs
@@ -79,5 +79,9 @@ class AuthenticationService (
 
     fun isAuthenticated(accessToken: String): Boolean {
         return authCredentialsRepository.existsByGithubAccessToken(accessToken)
+    }
+
+    fun getCustomerIdByAccessToken(accessToken: String): String? {
+        return authCredentialsRepository.findByGithubAccessToken(accessToken)?.customerId
     }
 }

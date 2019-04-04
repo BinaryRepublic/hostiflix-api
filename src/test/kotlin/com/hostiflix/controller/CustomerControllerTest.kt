@@ -1,6 +1,7 @@
 package com.hostiflix.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.hostiflix.config.JsonConfig
 import com.hostiflix.entity.Customer
 import com.hostiflix.service.CustomerService
 import com.hostiflix.support.MockData
@@ -26,7 +27,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 
 @RunWith(SpringJUnit4ClassRunner::class)
-@ContextConfiguration(classes = [JacksonAutoConfiguration::class])
+@ContextConfiguration(classes = [JsonConfig::class, JacksonAutoConfiguration::class])
 @WebMvcTest
 class CustomerControllerTest {
 

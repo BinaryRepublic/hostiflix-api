@@ -6,19 +6,21 @@ import com.hostiflix.dto.GithubCustomerDto
 import com.hostiflix.dto.GithubEmailResponseDto
 import com.hostiflix.support.MockData
 import com.hostiflix.webservice.githubWs.GithubWsImpl
-import com.nhaarman.mockito_kotlin.*
+import com.nhaarman.mockito_kotlin.check
+import com.nhaarman.mockito_kotlin.eq
+import com.nhaarman.mockito_kotlin.given
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.junit.Before
-import org.springframework.http.HttpMethod
-import org.springframework.web.client.RestTemplate
-import org.springframework.http.ResponseEntity
-import org.springframework.http.HttpStatus
-import org.assertj.core.api.Assertions.assertThat
 import org.springframework.core.ParameterizedTypeReference
+import org.springframework.http.HttpMethod
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.web.client.RestTemplate
 
 @RunWith(MockitoJUnitRunner::class)
 class GithubWsTest {

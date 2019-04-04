@@ -1,9 +1,8 @@
 package com.hostiflix.entity
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.GenericGenerator
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
+import javax.persistence.*
 
 @Entity
 class Customer(
@@ -14,5 +13,12 @@ class Customer(
 	var name: String,
 	var email: String,
 	var githubUsername: String,
-	val githubId: String
+	val githubId: String,
+	@JsonIgnore
+	@OneToMany(
+		fetch = FetchType.LAZY,
+		mappedBy = "customerId",
+		cascade = [CascadeType.ALL]
+	)
+	val authCredentials: List<AuthCredentials> = emptyList()
 )
