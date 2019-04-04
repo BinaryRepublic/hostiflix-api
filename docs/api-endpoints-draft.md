@@ -3,9 +3,12 @@
 ```
 Project {
 	id: String,
+	projectHash: String,
 	name: String,
+	projectType: ENUM ( NODEJS ),
+	startCode: String,
+	buildCode: String,
 	repositoryId: String,
-	projectType: ENUM ( NODEJS )
 	branches: [ Branch ]
 }
 
