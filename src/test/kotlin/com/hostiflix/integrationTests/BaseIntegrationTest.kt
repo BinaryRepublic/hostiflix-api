@@ -37,8 +37,8 @@ abstract class BaseIntegrationTest {
         @ClassRule
         @JvmField
         var postgreSQLContainer: PostgreSQLContainer<*> = KPostgreSQLContainer()
-                .withPassword("password")
-                .withUsername("postgres")
+            .withPassword("password")
+            .withUsername("postgres")
     }
 
     object Initializer : ApplicationContextInitializer<ConfigurableApplicationContext> {
