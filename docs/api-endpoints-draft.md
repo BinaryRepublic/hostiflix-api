@@ -27,6 +27,7 @@ GithubRepo {
 	id: String,
 	name: String
 	defaultBranch: String
+	owner: String
 }
 
 GithubBranch {
