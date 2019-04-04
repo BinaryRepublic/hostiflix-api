@@ -4,7 +4,7 @@
 Project {
 	id: String,
 	name: String,
-	repository: String,
+	repositoryId: String,
 	projectType: ENUM ( NODEJS )
 	branches: [ Branch ]
 }
