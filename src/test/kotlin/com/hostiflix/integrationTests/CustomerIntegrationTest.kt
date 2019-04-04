@@ -1,65 +1,21 @@
 package com.hostiflix.integrationTests
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.hostiflix.entity.AuthCredentials
 import com.hostiflix.entity.Customer
-import com.hostiflix.repository.AuthCredentialsRepository
-import com.hostiflix.repository.CustomerRepository
 import com.hostiflix.support.MockData
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
+import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.hasSize
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.After
 import org.junit.Before
-import org.junit.FixMethodOrder
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.MethodSorters
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
-import org.springframework.test.annotation.DirtiesContext
-import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.junit4.SpringRunner
 
-@RunWith(SpringRunner::class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-class CustomerIntegrationTest {
-
-    @Autowired
-    private lateinit var customerRepository: CustomerRepository
-
-    @Autowired
-    lateinit var objectMapper: ObjectMapper
-
-    @Autowired
-    private lateinit var authCredentialsRepository: AuthCredentialsRepository
-
-    @Value("\${local.server.port}")
-    private val serverPort: Int = 0
-
-    lateinit var customer: Customer
-    val accessToken = "accessToken"
+class CustomerIntegrationTest: BaseIntegrationTest() {
 
     @Before
     fun setUp() {
-        RestAssured.port = serverPort
         RestAssured.basePath = "/customers"
-
-        customer = customerRepository.save(MockData.customer("c1"))
-        authCredentialsRepository.save(AuthCredentials("ac1", accessToken, customer.id!!,  true))
-    }
-
-    @After
-    fun clearDatabase() {
-        authCredentialsRepository.deleteAll()
-        customerRepository.deleteAll()
     }
 
     @Test
@@ -129,7 +85,7 @@ class CustomerIntegrationTest {
         RestAssured
             .given()
             .header("Access-Token", accessToken)
-            .delete("/${customer.id}")
+            .delete("/${testCustomer!!.id}")
             .then()
             .log().ifValidationFails()
             .statusCode(HttpStatus.NO_CONTENT.value())

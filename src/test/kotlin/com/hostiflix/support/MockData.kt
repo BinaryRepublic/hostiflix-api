@@ -2,10 +2,8 @@ package com.hostiflix.support
 
 import com.hostiflix.dto.GithubCustomerDto
 import com.hostiflix.dto.GithubEmailResponseDto
-import com.hostiflix.entity.AuthCredentials
-import com.hostiflix.entity.Branch
-import com.hostiflix.entity.Customer
-import com.hostiflix.entity.Project
+import com.hostiflix.entity.*
+import java.time.Instant
 
 object MockData {
 
@@ -19,13 +17,13 @@ object MockData {
         )
     }
 
-    fun project(testId : String) : Project {
+    fun project(testId : String, customerId: String = "customerId_$testId") : Project {
         return Project(
             testId,
-            "customerId_$testId",
+            customerId,
             "name_$testId",
             "repository_$testId",
-            "projectType_$testId",
+            ProjectType.NODEJS.toString(),
             emptyList()
         ).apply {
             branches = listOf(
@@ -38,9 +36,25 @@ object MockData {
     fun branch(testId : String, projectTest: Project) : Branch {
         return Branch(
                 testId,
-            "name_$testId"
+            "name_$testId",
+            "subdomain_$testId"
         ).apply {
             project = projectTest
+            jobs = listOf(
+                job("j1", this),
+                job("j2", this)
+            )
+        }
+    }
+
+    fun job(testId: String, branch: Branch): Job {
+        return Job(
+            testId,
+            JobStatus.BUILD_SCHEDULED,
+            Instant.parse("2019-04-01T00:00:00Z"),
+            null
+        ).apply {
+            this.branch = branch
         }
     }
 

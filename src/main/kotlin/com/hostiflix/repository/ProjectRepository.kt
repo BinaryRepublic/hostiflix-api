@@ -5,4 +5,11 @@ import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface ProjectRepository : CrudRepository<Project, String>
+interface ProjectRepository : CrudRepository<Project, String> {
+
+    fun findAllByCustomerId(customerId: String): List<Project>
+
+    fun findByIdAndCustomerId(id: String, customerId: String): Project?
+
+    fun existsByIdAndCustomerId(id: String, customerId: String): Boolean
+}

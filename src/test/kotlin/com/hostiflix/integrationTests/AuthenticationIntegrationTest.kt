@@ -1,55 +1,20 @@
 package com.hostiflix.integrationTests
 
 import com.hostiflix.entity.GithubLoginState
-import com.hostiflix.repository.AuthCredentialsRepository
-import com.hostiflix.repository.CustomerRepository
-import com.hostiflix.repository.GithubLoginStateRepository
 import io.restassured.RestAssured
 import org.assertj.core.api.Assertions.assertThat
-import org.hamcrest.Matchers.notNullValue
 import org.hamcrest.Matchers.`is`
-import org.junit.After
-import org.junit.AfterClass
+import org.hamcrest.Matchers.notNullValue
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
-import org.springframework.test.annotation.DirtiesContext
-import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.junit4.SpringRunner
 
-@RunWith(SpringRunner::class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-class AuthenticationIntegrationTest {
-
-    @Autowired
-    private lateinit var githubLoginStateRepository: GithubLoginStateRepository
-
-    @Autowired
-    private lateinit var authCredentialsRepository: AuthCredentialsRepository
-
-    @Autowired
-    private lateinit var customerRepository: CustomerRepository
-
-    @Value("\${local.server.port}")
-    private val serverPort: Int = 0
+class AuthenticationIntegrationTest: BaseIntegrationTest() {
 
     @Before
-    fun setUp() {
+    override fun globalSetUp() {
         RestAssured.port = serverPort
         RestAssured.basePath = "/auth"
-    }
-
-    @After
-    fun clearDatabase() {
-        githubLoginStateRepository.deleteAll()
-        customerRepository.deleteAll()
-        authCredentialsRepository.deleteAll()
     }
 
     @Test

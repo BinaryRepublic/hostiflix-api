@@ -2,31 +2,34 @@ package com.hostiflix.service
 
 import com.hostiflix.entity.Project
 import com.hostiflix.repository.ProjectRepository
-import com.hostiflix.webservice.githubWs.GithubWs
 import org.springframework.stereotype.Service
 
 @Service
 class ProjectService (
+    private val authenticationService: AuthenticationService,
     private val projectRepository: ProjectRepository
-
 ) {
 
-    fun findAllProjects() = projectRepository.findAll().toList()
-
-    fun findProjectById(id: String): Project? {
-        val project = projectRepository.findById(id)
-        return project.takeIf { it.isPresent }?.get()
+    fun findAllProjectsByAccessToken(accessToken: String): List<Project> {
+        return projectRepository.findAllByCustomerId(getCustomerId(accessToken)).toList()
     }
 
-    fun assignProjectToAllBranches(newProject: Project) {
-        newProject.branches.forEach { it.project = newProject }
+    fun findProjectByIdAndAccessToken(id: String, accessToken: String): Project? {
+        return projectRepository.findByIdAndCustomerId(id, getCustomerId(accessToken))
     }
 
-    fun createProject(newProject: Project) : Project {
-        return projectRepository.save(newProject)
+    fun hasAccessToProject(id: String, accessToken: String): Boolean {
+        return projectRepository.existsByIdAndCustomerId(id, getCustomerId(accessToken))
     }
 
-    fun existsById(id: String) = projectRepository.existsById(id)
+    fun saveProject(project: Project, accessToken: String): Project {
+        project.customerId = getCustomerId(accessToken)
+        return projectRepository.save(project)
+    }
 
     fun deleteProject(id: String) = projectRepository.deleteById(id)
+
+    private fun getCustomerId(accessToken: String): String {
+        return authenticationService.getCustomerIdByAccessToken(accessToken)!!
+    }
 }

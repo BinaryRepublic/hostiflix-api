@@ -10,15 +10,15 @@ import com.hostiflix.service.CustomerService
 import com.hostiflix.support.MockData
 import com.hostiflix.webservice.githubWs.GithubWsImpl
 import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.check
 import com.nhaarman.mockito_kotlin.given
 import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.check
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.Before
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)

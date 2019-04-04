@@ -4,12 +4,12 @@ import com.hostiflix.repository.CustomerRepository
 import com.hostiflix.service.CustomerService
 import com.hostiflix.support.MockData
 import com.nhaarman.mockito_kotlin.given
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.assertj.core.api.Assertions.assertThat
 import java.util.*
 
 @RunWith(MockitoJUnitRunner::class)
