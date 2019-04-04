@@ -26,6 +26,7 @@ Job {
 GithubRepo {
 	id: String,
 	name: String
+	defaultBranch: String
 }
 
 GithubBranch {
