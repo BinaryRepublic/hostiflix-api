@@ -12,46 +12,41 @@ import com.hostiflix.support.MockData
 import io.restassured.RestAssured
 import org.junit.After
 import org.junit.Before
-import org.junit.ClassRule
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.util.TestPropertyValues
-import org.springframework.context.ApplicationContextInitializer
-import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringRunner
-import org.testcontainers.containers.PostgreSQLContainer
 
 @RunWith(SpringRunner::class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-@ContextConfiguration(initializers = [BaseIntegrationTest.Initializer::class])
+//@ContextConfiguration(initializers = [BaseIntegrationTest.Initializer::class])
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 abstract class BaseIntegrationTest {
 
-    companion object {
-        @ClassRule
-        @JvmField
-        var postgreSQLContainer: PostgreSQLContainer<*> = KPostgreSQLContainer()
-            .withPassword("password")
-            .withUsername("postgres")
-    }
-
-    object Initializer : ApplicationContextInitializer<ConfigurableApplicationContext> {
-        override fun initialize(configurableApplicationContext: ConfigurableApplicationContext) {
-            val jdbcUrl = postgreSQLContainer.getJdbcUrl()
-            val values = TestPropertyValues.of(
-                    "spring.datasource.url=$jdbcUrl",
-                    "spring.datasource.password=" + BaseIntegrationTest.postgreSQLContainer.getPassword(),
-                    "spring.datasource.username=" + BaseIntegrationTest.postgreSQLContainer.getUsername()
-            )
-            values.applyTo(configurableApplicationContext)
-        }
-    }
+//    TODO: make testcontainers work in CircleCI
+//    companion object {
+//        @ClassRule
+//        @JvmField
+//        var postgreSQLContainer: PostgreSQLContainer<*> = KPostgreSQLContainer()
+//            .withPassword("password")
+//            .withUsername("postgres")
+//    }
+//
+//    object Initializer : ApplicationContextInitializer<ConfigurableApplicationContext> {
+//        override fun initialize(configurableApplicationContext: ConfigurableApplicationContext) {
+//            val jdbcUrl = postgreSQLContainer.getJdbcUrl()
+//            val values = TestPropertyValues.of(
+//                    "spring.datasource.url=$jdbcUrl",
+//                    "spring.datasource.password=" + BaseIntegrationTest.postgreSQLContainer.getPassword(),
+//                    "spring.datasource.username=" + BaseIntegrationTest.postgreSQLContainer.getUsername()
+//            )
+//            values.applyTo(configurableApplicationContext)
+//        }
+//    }
 
     @Value("\${local.server.port}")
     val serverPort: Int = 0

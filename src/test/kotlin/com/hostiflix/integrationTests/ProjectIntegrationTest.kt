@@ -9,9 +9,6 @@ import org.hamcrest.Matchers.*
 import org.junit.Before
 import org.junit.Test
 import org.springframework.http.HttpStatus
-import org.testcontainers.containers.PostgreSQLContainer
-
-class KPostgreSQLContainer : PostgreSQLContainer<KPostgreSQLContainer>()
 
 class ProjectIntegrationTest: BaseIntegrationTest() {
 

@@ -14,10 +14,8 @@ spring:
   profiles:
     active: development
   datasource:
-    url: jdbc:postgresql:hostiflix
-    username: postgres
-    password: password
-    driver-class-name: org.postgresql.Driver
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
 
 jedisConFactory:
   hostname: localhost

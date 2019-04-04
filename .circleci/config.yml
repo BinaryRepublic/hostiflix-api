@@ -2,7 +2,6 @@ defaults:
   working_directory: ~/repo
 
 version: 2
-executorType: machine
 jobs:
   build:
 
@@ -27,6 +26,7 @@ jobs:
           paths:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
+            - setup_remote_docker
       - run: gradle build
       - run: gradle test
       - persist_to_workspace:
@@ -43,6 +43,7 @@ jobs:
       - run: openrc boot
       - attach_workspace:
           at: .
+      - setup_remote_docker
       - run:
           name: create dockerfile
           command: |
