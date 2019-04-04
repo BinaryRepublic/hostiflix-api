@@ -1,4 +1,4 @@
-package com.hostiflix.dto
+package com.hostiflix.dto.githubDto
 
 class GithubEmailResponseDto {
     lateinit var email: String

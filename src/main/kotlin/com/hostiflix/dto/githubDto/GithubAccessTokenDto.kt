@@ -1,4 +1,4 @@
-package com.hostiflix.dto
+package com.hostiflix.dto.githubDto
 
 import com.fasterxml.jackson.annotation.JsonProperty
 

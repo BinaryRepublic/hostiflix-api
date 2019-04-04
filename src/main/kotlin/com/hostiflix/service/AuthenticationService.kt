@@ -1,7 +1,7 @@
 package com.hostiflix.service
 
 import com.hostiflix.config.GithubConfig
-import com.hostiflix.dto.GithubCustomerDto
+import com.hostiflix.dto.githubDto.GithubCustomerDto
 import com.hostiflix.entity.AuthCredentials
 import com.hostiflix.entity.Customer
 import com.hostiflix.entity.GithubApplicationScope
@@ -84,4 +84,6 @@ class AuthenticationService (
     fun getCustomerIdByAccessToken(accessToken: String): String? {
         return authCredentialsRepository.findByGithubAccessToken(accessToken)?.customerId
     }
+
+    fun findAuthCredentialsByCustomerId(customerId : String) = authCredentialsRepository.findByCustomerIdAndLatest(customerId, true)
 }

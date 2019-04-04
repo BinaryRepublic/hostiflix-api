@@ -1,7 +1,7 @@
 package com.hostiflix.support
 
-import com.hostiflix.dto.GithubCustomerDto
-import com.hostiflix.dto.GithubEmailResponseDto
+import com.hostiflix.dto.githubDto.GithubCustomerDto
+import com.hostiflix.dto.githubDto.GithubEmailResponseDto
 import com.hostiflix.entity.*
 import java.time.Instant
 
@@ -21,9 +21,14 @@ object MockData {
         return Project(
             testId,
             customerId,
+            "hash_$testId",
             "name_$testId",
-            "repository_$testId",
+            "repositoryOwner_$testId",
+            "repositoryName_$testId",
             ProjectType.NODEJS.toString(),
+            "startCode_$testId",
+            "buildCode_$testId",
+            Instant.parse("2019-04-01T00:00:00Z"),
             emptyList()
         ).apply {
             branches = listOf(

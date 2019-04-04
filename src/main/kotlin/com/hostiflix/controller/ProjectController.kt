@@ -44,7 +44,9 @@ class ProjectController(
         @RequestHeader("Access-Token")
         accessToken: String
     ): ResponseEntity<*> {
-        return ResponseEntity.status(201).body(projectService.saveProject(newProject, accessToken))
+        val createdProject = projectService.createProject(accessToken, newProject)
+
+        return ResponseEntity.status(201).body(createdProject)
     }
 
     @PutMapping

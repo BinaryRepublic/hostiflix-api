@@ -2,12 +2,14 @@ package com.hostiflix.service
 
 import com.hostiflix.entity.Project
 import com.hostiflix.repository.ProjectRepository
+import com.hostiflix.webservice.githubWs.GithubWs
 import org.springframework.stereotype.Service
 
 @Service
 class ProjectService (
-    private val authenticationService: AuthenticationService,
-    private val projectRepository: ProjectRepository
+    private val projectRepository: ProjectRepository,
+    private val githubWs: GithubWs,
+    private val authenticationService: AuthenticationService
 ) {
 
     fun findAllProjectsByAccessToken(accessToken: String): List<Project> {
@@ -25,6 +27,12 @@ class ProjectService (
     fun saveProject(project: Project, accessToken: String): Project {
         project.customerId = getCustomerId(accessToken)
         return projectRepository.save(project)
+    }
+
+    fun createProject(accessToken: String, newProject: Project) : Project {
+        githubWs.createWebhook(accessToken, newProject)
+
+        return saveProject(newProject, accessToken)
     }
 
     fun deleteProject(id: String) = projectRepository.deleteById(id)
