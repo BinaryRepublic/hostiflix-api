@@ -1,9 +1,9 @@
 package com.hostiflix.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.hostiflix.config.JsonConfig
 import com.hostiflix.entity.Project
 import com.hostiflix.service.ProjectService
+import com.hostiflix.support.JsonConfig
 import com.hostiflix.support.MockData
 import com.nhaarman.mockito_kotlin.*
 import org.assertj.core.api.Assertions.assertThat

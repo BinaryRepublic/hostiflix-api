@@ -1,6 +1,7 @@
 package com.hostiflix.controller
 
 import com.hostiflix.service.AuthenticationService
+import com.hostiflix.support.JsonConfig
 import com.nhaarman.mockito_kotlin.given
 import org.hamcrest.Matchers.`is`
 import org.junit.Before
@@ -10,7 +11,9 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
@@ -19,6 +22,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 
 @RunWith(MockitoJUnitRunner::class)
+@ContextConfiguration(classes = [JsonConfig::class, JacksonAutoConfiguration::class])
 @WebMvcTest
 class AuthenticationControllerTest {
 

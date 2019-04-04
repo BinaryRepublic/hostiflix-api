@@ -22,6 +22,9 @@ spring:
 spring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults: false
 spring.jpa.database-platform: org.hibernate.dialect.PostgreSQL9Dialect
 
+spring.jackson.serialization.write_dates_as_timestamps: false
+spring.jackson.default-property-inclusion: non_null
+
 jedisConFactory:
   hostname: localhost
   port: 6379
