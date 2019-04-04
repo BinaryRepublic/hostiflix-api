@@ -8,7 +8,8 @@ Project {
 	type: ENUM ( NODEJS ),
 	startCode: String,
 	buildCode: String,
-	repositoryId: String,
+	repositoryOwner: String,
+	repositoryName: String,
 	branches: [ Branch ],
 	createdAt: Datetime
 }
