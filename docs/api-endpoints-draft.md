@@ -29,7 +29,6 @@ GithubRepo {
 }
 
 GithubBranch {
-	id: String,
 	name: String
 }
 ```
