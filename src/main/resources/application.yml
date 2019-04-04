@@ -14,9 +14,22 @@ spring:
   profiles:
     active: development
   datasource:
-    url: jdbc:h2:mem:testdb
-    driver-class-name: org.h2.Driver
+    url: "jdbc:postgresql:hostiflix"
+    username: "postgres"
+    password: "password"
+    driver-class-name: org.postgresql.Driver
+
+spring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults: false
+spring.jpa.database-platform: org.hibernate.dialect.PostgreSQL9Dialect
 
 jedisConFactory:
   hostname: localhost
   port: 6379
+
+---
+
+spring:
+  profiles: test
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
