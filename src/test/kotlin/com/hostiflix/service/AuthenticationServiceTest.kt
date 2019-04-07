@@ -53,7 +53,7 @@ class AuthenticationServiceTest {
         given(githubLoginStateRepository.save<GithubLoginState>(any())).willReturn(GithubLoginState(stateId))
 
         /* When */
-        val githubRedirectUrl = authenticationService.buildNewRedirectUrlForGithub()
+        val githubRedirectUrl = authenticationService.buildGithubAuthorizeUrl()
 
         /* Then */
         assertThat(githubRedirectUrl).isEqualTo("http://github.com/redirect?state=id&scope=REPO,USER")

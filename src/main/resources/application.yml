@@ -1,12 +1,13 @@
 noAccessTokenRequiredEndpoints: /auth, /github/webhook
 
-defaultRedirectUrl: http://localhost:3000/github-redirect
+hostiflix-login-redirect: https://hostiflix.com/github-redirect
 
 deploymentServiceUrl: http://deployment-service/jobs/submit
 
 github:
   login-base: https://github.com/login/oauth/
-  login-redirect: authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${defaultRedirectUrl}&state={state}&scope={scope}
+  login-redirect: https://api.hostiflix.com/auth/getRedirectUrl
+  login-authorize: authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${github.login-redirect}&state={state}&scope={scope}
   login-get-access-token: access_token?client_id=${GITHUB_CLIENT_ID}&client_secret=${GITHUB_CLIENT_SECRET}&code={code}&redirect_uri=${defaultRedirectUrl}&state={state}
   api-base: https://api.github.com/
   api-user: user

@@ -50,7 +50,7 @@ class AuthenticationControllerTest {
     fun `should return new redirect url for github`() {
         /* Given */
         val githubRedirectUrl = "githubRedirectUrl"
-        given(authenticationService.buildNewRedirectUrlForGithub()).willReturn(githubRedirectUrl)
+        given(authenticationService.buildGithubAuthorizeUrl()).willReturn(githubRedirectUrl)
 
         /* When, Then */
         mockMvc

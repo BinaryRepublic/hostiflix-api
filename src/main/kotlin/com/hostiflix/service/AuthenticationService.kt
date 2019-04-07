@@ -9,7 +9,9 @@ import com.hostiflix.entity.GithubLoginState
 import com.hostiflix.repository.AuthCredentialsRepository
 import com.hostiflix.repository.GithubLoginStateRepository
 import com.hostiflix.webservice.githubWs.GithubWs
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import org.springframework.web.util.UriComponentsBuilder
 
 @Service
 class AuthenticationService (
@@ -19,12 +21,15 @@ class AuthenticationService (
         private val githubWs: GithubWs,
         private val githubConfig: GithubConfig
 ){
-    fun buildNewRedirectUrlForGithub() : String {
-        val githubRedirectUrl = githubConfig.loginBase + githubConfig.loginRedirect
+    @Value("\${hostiflix-login-redirect}")
+    private lateinit var hostiflixLoginRedirect: String
+
+    fun buildGithubAuthorizeUrl() : String {
+        val githubAuthorizeUrl = githubConfig.loginBase + githubConfig.loginAuthorize
         val state = createAndStoreNewGithubState()
         val scope = listOf(GithubApplicationScope.REPO, GithubApplicationScope.USER)
 
-        return githubRedirectUrl
+        return githubAuthorizeUrl
             .replace("{state}", state)
             .replace("{scope}", scope.joinToString(","))
     }
@@ -33,6 +38,14 @@ class AuthenticationService (
         val newState = GithubLoginState()
 
         return githubLoginStateRepository.save(newState).id
+    }
+
+    fun buildRedirectUrl(code: String, state: String): String {
+        return UriComponentsBuilder
+            .fromUriString(hostiflixLoginRedirect)
+            .queryParam("code", code)
+            .queryParam("state", state)
+            .build().toUriString()
     }
 
     fun authenticateOnGithubAndReturnAccessToken(code : String, state : String) : String? {
