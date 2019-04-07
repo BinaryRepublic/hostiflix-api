@@ -25,7 +25,7 @@ class AuthenticationIntegrationTest: BaseIntegrationTest() {
             .then()
             .log().ifValidationFails()
             .statusCode(HttpStatus.OK.value())
-            .body("redirectUrlGithub", notNullValue())
+            .body("githubAuthorizeUrl", notNullValue())
 
         val githubLoginStateList = githubLoginStateRepository.findAll().toList()
         assertThat(githubLoginStateList.size).isEqualTo(1)

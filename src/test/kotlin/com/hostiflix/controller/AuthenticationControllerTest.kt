@@ -57,7 +57,7 @@ class AuthenticationControllerTest {
             .perform(get("/auth/login"))
             .andDo(print())
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$.redirectUrlGithub", `is` (githubRedirectUrl)))
+            .andExpect(jsonPath("$.githubAuthorizeUrl", `is` (githubRedirectUrl)))
     }
 
     @Test

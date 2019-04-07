@@ -43,7 +43,7 @@ class AuthenticationServiceTest {
     @Before
     fun setup() {
         given(githubConfig.loginBase).willReturn("http://github.com/")
-        given(githubConfig.loginRedirect).willReturn("redirect?state={state}&scope={scope}")
+        given(githubConfig.loginAuthorize).willReturn("redirect?state={state}&scope={scope}")
     }
 
     @Test
