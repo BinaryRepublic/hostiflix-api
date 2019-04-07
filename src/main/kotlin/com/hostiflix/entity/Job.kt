@@ -1,16 +1,12 @@
 package com.hostiflix.entity
 
 import com.fasterxml.jackson.annotation.JsonBackReference
-import org.hibernate.annotations.GenericGenerator
 import java.time.Instant
 import javax.persistence.*
 
 @Entity
 class Job (
-    @Id
-    @GeneratedValue(generator = "system-uuid")
-    @GenericGenerator(name = "system-uuid", strategy = "uuid2")
-    var id: String? = null,
+    val id: String,
 
     var status: JobStatus,
 

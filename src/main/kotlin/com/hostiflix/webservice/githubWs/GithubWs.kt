@@ -1,8 +1,8 @@
 package com.hostiflix.webservice.githubWs
 
-import com.hostiflix.dto.githubDto.GithubBranchDto
-import com.hostiflix.dto.githubDto.GithubCustomerDto
-import com.hostiflix.dto.githubDto.GithubRepoDto
+import com.hostiflix.dto.GithubBranchDto
+import com.hostiflix.dto.GithubCustomerDto
+import com.hostiflix.dto.GithubRepoDto
 import com.hostiflix.entity.Project
 
 interface GithubWs {

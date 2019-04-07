@@ -1,4 +1,4 @@
-package com.hostiflix.dto.githubDto.webhookDto
+package com.hostiflix.dto
 
 class GithubWebhookResponseRepoDto {
     lateinit var name: String

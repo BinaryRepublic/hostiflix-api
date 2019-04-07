@@ -21,9 +21,9 @@ data class Project(
 
     var name: String,
 
-    val repositoryOwner: String,
+    var repositoryOwner: String,
 
-    val repositoryName: String,
+    var repositoryName: String,
 
     val type: String,
 

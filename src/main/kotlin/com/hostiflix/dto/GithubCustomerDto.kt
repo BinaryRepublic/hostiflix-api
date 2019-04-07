@@ -1,4 +1,4 @@
-package com.hostiflix.dto.githubDto
+package com.hostiflix.dto
 
 data class GithubCustomerDto (
     val id: String,

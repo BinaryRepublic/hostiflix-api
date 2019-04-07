@@ -1,4 +1,4 @@
-package com.hostiflix.dto.githubDto
+package com.hostiflix.dto
 
 import com.fasterxml.jackson.annotation.JsonSetter
 

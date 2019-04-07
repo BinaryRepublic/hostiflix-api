@@ -3,7 +3,6 @@ package com.hostiflix.repository
 import com.hostiflix.entity.Project
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
-import java.util.*
 
 @Repository
 interface ProjectRepository : CrudRepository<Project, String> {
@@ -14,5 +13,5 @@ interface ProjectRepository : CrudRepository<Project, String> {
 
     fun existsByIdAndCustomerId(id: String, customerId: String): Boolean
 
-    fun findByRepositoryOwnerAndRepositoryName(repositoryOwner: String, repositoryName: String) : Optional<Project>
+    fun findByRepositoryOwnerAndRepositoryName(repositoryOwner: String, repositoryName: String) : Project?
 }

@@ -29,7 +29,7 @@ class ProjectService (
         return projectRepository.save(project)
     }
 
-    fun createProject(accessToken: String, newProject: Project) : Project {
+    fun createProject(newProject: Project, accessToken: String) : Project {
         githubWs.createWebhook(accessToken, newProject)
 
         return saveProject(newProject, accessToken)

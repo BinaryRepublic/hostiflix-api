@@ -1,8 +1,7 @@
 package com.hostiflix.webservice.githubWs
 
 import com.hostiflix.config.GithubConfig
-import com.hostiflix.dto.githubDto.*
-import com.hostiflix.dto.githubDto.webhookDto.GithubWebhookRequestDto
+import com.hostiflix.dto.*
 import com.hostiflix.entity.Project
 import org.springframework.context.annotation.Profile
 import org.springframework.core.ParameterizedTypeReference

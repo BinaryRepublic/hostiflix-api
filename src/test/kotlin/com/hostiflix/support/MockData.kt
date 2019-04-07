@@ -1,7 +1,6 @@
 package com.hostiflix.support
 
-import com.hostiflix.dto.githubDto.GithubCustomerDto
-import com.hostiflix.dto.githubDto.GithubEmailResponseDto
+import com.hostiflix.dto.*
 import com.hostiflix.entity.*
 import java.time.Instant
 
@@ -42,7 +41,7 @@ object MockData {
         return Branch(
                 testId,
             "name_$testId",
-            "subdomain_$testId"
+            "subDomain_$testId"
         ).apply {
             project = projectTest
             jobs = listOf(
@@ -81,6 +80,51 @@ object MockData {
             "githubAccessToken_$testId",
             "customerId_$testId",
             false
+        )
+    }
+
+    fun githubWebhookResponseDto() : GithubWebhookResponseDto {
+        return GithubWebhookResponseDto().apply {
+            ref = "refs/heads/branch"
+            repository = githubWebhookResponseRepoDto()
+        }
+    }
+
+    private fun githubWebhookResponseRepoDto() : GithubWebhookResponseRepoDto {
+        return GithubWebhookResponseRepoDto().apply {
+            name = "name"
+            url = "https://url"
+            owner = githubWebhookReposponseRepoOwnerDto()
+        }
+    }
+
+    private fun githubWebhookReposponseRepoOwnerDto() : GithubWebhookReponseRepoOwnerDto {
+        return GithubWebhookReponseRepoOwnerDto().apply {
+            name = "name"
+        }
+    }
+
+    fun githubRepoDto(testId: String): GithubRepoDto {
+        return GithubRepoDto().apply {
+            id = testId
+            fullName = "fullName_$testId"
+            defaultBranch = "defaultBranch_$testId"
+        }
+    }
+
+    fun githubBranchDto(testId: String) : GithubBranchDto {
+        return GithubBranchDto().apply {
+            name = "name_$testId"
+        }
+    }
+
+    fun deploymentServiceRequestDto(testId: String): DeploymentServiceRequestDto {
+        return DeploymentServiceRequestDto(
+            "startCode_$testId",
+            "buildCode_$testId",
+            "githubAccessToken_$testId",
+            "url",
+            "subDomain_$testId"
         )
     }
 }

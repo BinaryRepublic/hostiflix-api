@@ -1,7 +1,9 @@
 package com.hostiflix.service
 
 import com.hostiflix.dto.DeploymentServiceRequestDto
-import com.hostiflix.dto.githubDto.webhookDto.GithubWebhookResponseDto
+import com.hostiflix.dto.GithubWebhookResponseDto
+import com.hostiflix.entity.Job
+import com.hostiflix.repository.ProjectRepository
 import com.hostiflix.webservice.deploymentWs.DeploymentWs
 import com.hostiflix.webservice.githubWs.GithubWs
 import org.springframework.http.HttpStatus
@@ -9,20 +11,20 @@ import org.springframework.stereotype.Service
 
 @Service
 class GithubService (
-    private val projectService: ProjectService,
-    private val authenticationService: AuthenticationService,
-    private val deploymentWs: DeploymentWs,
-    private val githubWs: GithubWs
+        private val projectRepository: ProjectRepository,
+        private val authenticationService: AuthenticationService,
+        private val deploymentWs: DeploymentWs,
+        private val githubWs: GithubWs
 ) {
     fun filterWebHooksAndTriggerDeployment(githubWebhookResponseDto: GithubWebhookResponseDto) : HttpStatus {
         val webhookBranch = githubWebhookResponseDto.ref.removePrefix("refs/heads/")
-        val project = projectService.findProjectByRepositoryOwnerAndRepositoryName(githubWebhookResponseDto.repository.owner.name, githubWebhookResponseDto.repository.name)!!
+        val project = projectRepository.findByRepositoryOwnerAndRepositoryName(githubWebhookResponseDto.repository.owner.name, githubWebhookResponseDto.repository.name)!!
         val branch = project.branches.firstOrNull { it.name == webhookBranch }
 
         return if (branch != null){
             val startCode = project.startCode
             val buildCode = project.buildCode
-            val token = authenticationService.findAuthCredentialsByCustomerId(project!!.customerId).githubAccessToken
+            val token = authenticationService.findAuthCredentialsByCustomerId(project.customerId!!).githubAccessToken
             val gitRepo = githubWebhookResponseDto.repository.url.removePrefix("https://")
             val subDomain = branch.subDomain
 
@@ -34,7 +36,7 @@ class GithubService (
                 this.branch = branch
             }
             branch.jobs = listOf(job)
-            projectService.saveProject(project)
+            projectRepository.save(project)
 
             HttpStatus.ACCEPTED
         } else {

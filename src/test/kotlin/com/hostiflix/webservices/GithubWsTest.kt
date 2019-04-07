@@ -1,9 +1,9 @@
 package com.hostiflix.webservices
 
 import com.hostiflix.config.GithubConfig
-import com.hostiflix.dto.githubDto.GithubAccessTokenDto
-import com.hostiflix.dto.githubDto.GithubCustomerDto
-import com.hostiflix.dto.githubDto.GithubEmailResponseDto
+import com.hostiflix.dto.GithubAccessTokenDto
+import com.hostiflix.dto.GithubCustomerDto
+import com.hostiflix.dto.GithubEmailResponseDto
 import com.hostiflix.support.MockData
 import com.hostiflix.webservice.githubWs.GithubWsImpl
 import com.nhaarman.mockito_kotlin.check

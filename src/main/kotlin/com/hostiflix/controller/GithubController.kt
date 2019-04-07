@@ -1,8 +1,7 @@
 package com.hostiflix.controller
 
-import com.hostiflix.dto.githubDto.webhookDto.GithubWebhookResponseDto
+import com.hostiflix.dto.GithubWebhookResponseDto
 import com.hostiflix.service.GithubService
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -15,8 +14,9 @@ class GithubController(
     fun filterWebHooksAndTriggerDeployment(
         @RequestBody
         githubWebhookResponseDto : GithubWebhookResponseDto
-    ): HttpStatus {
-        return githubService.filterWebHooksAndTriggerDeployment(githubWebhookResponseDto)
+    ): ResponseEntity<Void> {
+        val httpStatus = githubService.filterWebHooksAndTriggerDeployment(githubWebhookResponseDto)
+        return ResponseEntity(httpStatus)
     }
 
     @GetMapping("/repos")
