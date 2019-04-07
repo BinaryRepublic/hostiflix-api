@@ -12,7 +12,7 @@ class Job (
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
     var id: String? = null,
 
-    val status: JobStatus,
+    var status: JobStatus,
 
     @Column(nullable = false, updatable = false)
     var createdAt: Instant? = null,

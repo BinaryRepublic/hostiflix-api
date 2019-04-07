@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.hostiflix.entity.AuthCredentials
 import com.hostiflix.entity.Customer
 import com.hostiflix.entity.Project
-import com.hostiflix.repository.AuthCredentialsRepository
-import com.hostiflix.repository.CustomerRepository
-import com.hostiflix.repository.GithubLoginStateRepository
-import com.hostiflix.repository.ProjectRepository
+import com.hostiflix.repository.*
 import com.hostiflix.support.MockData
 import io.restassured.RestAssured
 import org.junit.After
@@ -59,6 +56,9 @@ abstract class BaseIntegrationTest {
 
     @Autowired
     lateinit var projectRepository: ProjectRepository
+
+    @Autowired
+    lateinit var jobRepository: JobRepository
 
     @Autowired
     lateinit var githubLoginStateRepository: GithubLoginStateRepository
