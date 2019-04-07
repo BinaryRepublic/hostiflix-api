@@ -1,5 +1,6 @@
 package com.hostiflix.controller
 
+import com.hostiflix.dto.GithubRedirectEnvironment
 import com.hostiflix.config.JsonConfig
 import com.hostiflix.service.AuthenticationService
 import com.nhaarman.mockito_kotlin.given
@@ -49,8 +50,8 @@ class AuthenticationControllerTest {
     @Test
     fun `should return new redirect url for github`() {
         /* Given */
-        val githubRedirectUrl = "githubRedirectUrl"
-        given(authenticationService.buildGithubAuthorizeUrl()).willReturn(githubRedirectUrl)
+        val githubRedirectUrl = "githubRedirectUrl/PRODUCTION"
+        given(authenticationService.buildGithubAuthorizeUrl(GithubRedirectEnvironment.PRODUCTION)).willReturn(githubRedirectUrl)
 
         /* When, Then */
         mockMvc

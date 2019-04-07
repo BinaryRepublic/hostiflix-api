@@ -1,6 +1,7 @@
 package com.hostiflix.service
 
 import com.hostiflix.config.GithubConfig
+import com.hostiflix.dto.GithubRedirectEnvironment
 import com.hostiflix.entity.AuthCredentials
 import com.hostiflix.entity.GithubLoginState
 import com.hostiflix.repository.AuthCredentialsRepository
@@ -43,7 +44,7 @@ class AuthenticationServiceTest {
     @Before
     fun setup() {
         given(githubConfig.loginBase).willReturn("http://github.com/")
-        given(githubConfig.loginAuthorize).willReturn("redirect?state={state}&scope={scope}")
+        given(githubConfig.loginAuthorize).willReturn("redirect/{environment}?state={state}&scope={scope}")
     }
 
     @Test
@@ -53,10 +54,10 @@ class AuthenticationServiceTest {
         given(githubLoginStateRepository.save<GithubLoginState>(any())).willReturn(GithubLoginState(stateId))
 
         /* When */
-        val githubRedirectUrl = authenticationService.buildGithubAuthorizeUrl()
+        val githubRedirectUrl = authenticationService.buildGithubAuthorizeUrl(GithubRedirectEnvironment.PRODUCTION)
 
         /* Then */
-        assertThat(githubRedirectUrl).isEqualTo("http://github.com/redirect?state=id&scope=REPO,USER")
+        assertThat(githubRedirectUrl).isEqualTo("http://github.com/redirect/PRODUCTION?state=id&scope=REPO,USER")
     }
 
     @Test

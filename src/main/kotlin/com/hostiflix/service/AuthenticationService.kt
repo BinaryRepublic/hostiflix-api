@@ -2,6 +2,7 @@ package com.hostiflix.service
 
 import com.hostiflix.config.GithubConfig
 import com.hostiflix.dto.GithubCustomerDto
+import com.hostiflix.dto.GithubRedirectEnvironment
 import com.hostiflix.entity.AuthCredentials
 import com.hostiflix.entity.Customer
 import com.hostiflix.entity.GithubApplicationScope
@@ -21,10 +22,13 @@ class AuthenticationService (
         private val githubWs: GithubWs,
         private val githubConfig: GithubConfig
 ){
-    @Value("\${hostiflix-login-redirect}")
-    private lateinit var hostiflixLoginRedirect: String
+    @Value("\${hostiflix-login-redirect.prod}")
+    private lateinit var hostiflixLoginRedirectProd: String
 
-    fun buildGithubAuthorizeUrl() : String {
+    @Value("\${hostiflix-login-redirect.dev}")
+    private lateinit var hostiflixLoginRedirectDev: String
+
+    fun buildGithubAuthorizeUrl(environment: GithubRedirectEnvironment) : String {
         val githubAuthorizeUrl = githubConfig.loginBase + githubConfig.loginAuthorize
         val state = createAndStoreNewGithubState()
         val scope = listOf(GithubApplicationScope.REPO, GithubApplicationScope.USER)
@@ -32,6 +36,7 @@ class AuthenticationService (
         return githubAuthorizeUrl
             .replace("{state}", state)
             .replace("{scope}", scope.joinToString(","))
+            .replace("{environment}", environment.toString())
     }
 
     fun createAndStoreNewGithubState() : String {
@@ -40,7 +45,11 @@ class AuthenticationService (
         return githubLoginStateRepository.save(newState).id
     }
 
-    fun buildRedirectUrl(code: String, state: String): String {
+    fun buildRedirectUrl(code: String, state: String, environment: GithubRedirectEnvironment): String {
+        val hostiflixLoginRedirect = when(environment) {
+            GithubRedirectEnvironment.PRODUCTION -> hostiflixLoginRedirectProd
+            GithubRedirectEnvironment.DEVELOPMENT -> hostiflixLoginRedirectDev
+        }
         return UriComponentsBuilder
             .fromUriString(hostiflixLoginRedirect)
             .queryParam("code", code)
