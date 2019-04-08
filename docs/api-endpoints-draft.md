@@ -58,10 +58,10 @@ res: HTTP 200 {
 ```
 
 ```
-GET /projects/projectHash
+GET /projects/hash
 
 res: HTTP 200 {
-	"projectHash": "k24"
+	"hash": "k24"
 }
 ```
 
