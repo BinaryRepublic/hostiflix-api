@@ -3,6 +3,7 @@ package com.hostiflix.support
 import com.hostiflix.dto.*
 import com.hostiflix.entity.*
 import java.time.Instant
+import java.util.*
 
 object MockData {
 
@@ -44,9 +45,9 @@ object MockData {
             "subDomain_$testId"
         ).apply {
             project = projectTest
-            jobs = listOf(
-                job("j1", this),
-                job("j2", this)
+            jobs = mutableListOf(
+                job(UUID.randomUUID().toString(), this),
+                job(UUID.randomUUID().toString(), this)
             )
         }
     }

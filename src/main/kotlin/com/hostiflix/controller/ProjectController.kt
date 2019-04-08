@@ -57,7 +57,7 @@ class ProjectController(
         newProject: Project
     ): ResponseEntity<*> {
         return if (projectService.hasAccessToProject(newProject.id!!, accessToken)){
-            ResponseEntity.ok().body(projectService.saveProject(newProject, accessToken))
+            ResponseEntity.ok().body(projectService.updateProject(newProject, accessToken))
         } else {
             ResponseEntity.badRequest().body(hashMapOf("error" to "invalid project-id or not authorized to access resource"))
         }

@@ -22,7 +22,7 @@ class GithubIntegrationTest: BaseIntegrationTest() {
     @Test
     fun `should return http status accepted `() {
         // given
-        val branch = Branch("", "master", "subDomain", emptyList())
+        val branch = Branch("", "master", "subDomain")
         val githubWebhookResponseDto = MockData.githubWebhookResponseDto()
         githubWebhookResponseDto.apply {
             ref = "refs/heads/${branch.name}"
@@ -48,7 +48,7 @@ class GithubIntegrationTest: BaseIntegrationTest() {
             .log().ifValidationFails()
             .statusCode(HttpStatus.ACCEPTED.value())
 
-        val resultingProject = projectRepository.findById(project!!.id!!).get()
+        val resultingProject = projectRepository.findById(project.id!!).get()
         assertThat(resultingProject.branches.first().jobs.size).isEqualTo(1)
     }
 

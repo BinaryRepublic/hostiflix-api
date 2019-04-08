@@ -35,6 +35,15 @@ class ProjectService (
         return saveProject(newProject, accessToken)
     }
 
+    fun updateProject(newProject: Project, accessToken: String): Project {
+        val currentProject = projectRepository.findById(newProject.id!!).get()
+        newProject.branches.forEach { updatedBranch ->
+            val currentJobs = currentProject.branches.first { it.id == updatedBranch.id }.jobs
+            updatedBranch.jobs = currentJobs
+        }
+        return saveProject(newProject, accessToken)
+    }
+
     fun deleteProject(id: String) = projectRepository.deleteById(id)
 
     private fun getCustomerId(accessToken: String): String {

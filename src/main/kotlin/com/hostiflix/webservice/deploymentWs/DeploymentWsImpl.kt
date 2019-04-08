@@ -1,7 +1,7 @@
 package com.hostiflix.webservice.deploymentWs
 
 import com.hostiflix.dto.DeploymentServiceRequestDto
-import com.hostiflix.entity.Job
+import com.hostiflix.dto.DeploymentServiceResponseDto
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpEntity
@@ -18,14 +18,14 @@ class DeploymentWsImpl(
     @Value("\${deploymentServiceUrl}")
     lateinit var deploymentServiceUrl : String
 
-    override fun postWebhook(deploymentServiceRequestDto: DeploymentServiceRequestDto) : Job {
+    override fun postWebhook(deploymentServiceRequestDto: DeploymentServiceRequestDto) : DeploymentServiceResponseDto {
         val httpEntity = HttpEntity<Any>(deploymentServiceRequestDto)
 
         val response = restTemplate.exchange(
             deploymentServiceUrl,
             HttpMethod.POST,
             httpEntity,
-            Job::class.java
+            DeploymentServiceResponseDto::class.java
         )
 
         return response.body!!

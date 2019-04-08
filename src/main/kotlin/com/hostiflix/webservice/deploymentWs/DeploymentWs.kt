@@ -1,9 +1,9 @@
 package com.hostiflix.webservice.deploymentWs
 
 import com.hostiflix.dto.DeploymentServiceRequestDto
-import com.hostiflix.entity.Job
+import com.hostiflix.dto.DeploymentServiceResponseDto
 
 interface DeploymentWs {
 
-    fun postWebhook(deploymentServiceRequestDto: DeploymentServiceRequestDto) : Job
+    fun postWebhook(deploymentServiceRequestDto: DeploymentServiceRequestDto) : DeploymentServiceResponseDto
 }

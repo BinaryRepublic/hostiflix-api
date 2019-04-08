@@ -5,8 +5,9 @@ import java.time.Instant
 import javax.persistence.*
 
 @Entity
-class Job (
-    val id: String,
+data class Job (
+    @Id
+    var id: String,
 
     var status: JobStatus,
 
@@ -15,14 +16,14 @@ class Job (
 
     var finishedAt: Instant? = null
 ) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
+    lateinit var branch: Branch
+
     @PrePersist
     fun prePersist() {
         createdAt = Instant.now()
     }
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonBackReference
-    lateinit var branch: Branch
 }
 
 enum class JobStatus {

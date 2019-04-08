@@ -11,10 +11,10 @@ import org.springframework.stereotype.Service
 
 @Service
 class GithubService (
-        private val projectRepository: ProjectRepository,
-        private val authenticationService: AuthenticationService,
-        private val deploymentWs: DeploymentWs,
-        private val githubWs: GithubWs
+    private val projectRepository: ProjectRepository,
+    private val authenticationService: AuthenticationService,
+    private val deploymentWs: DeploymentWs,
+    private val githubWs: GithubWs
 ) {
     fun filterWebHooksAndTriggerDeployment(githubWebhookResponseDto: GithubWebhookResponseDto) : HttpStatus {
         val webhookBranch = githubWebhookResponseDto.ref.removePrefix("refs/heads/")
@@ -30,12 +30,12 @@ class GithubService (
 
             val deploymentServiceRequestDto = DeploymentServiceRequestDto(startCode, buildCode, token, gitRepo, subDomain)
 
-            val returnedJob = deploymentWs.postWebhook(deploymentServiceRequestDto)
+            val deploymentServiceResponse = deploymentWs.postWebhook(deploymentServiceRequestDto)
 
-            val job = Job(returnedJob.id, returnedJob.status).apply {
-                this.branch = branch
-            }
-            branch.jobs = listOf(job)
+            branch.jobs.add(
+                Job(deploymentServiceResponse.id, deploymentServiceResponse.status)
+                    .apply { this.branch = branch }
+            )
             projectRepository.save(project)
 
             HttpStatus.ACCEPTED
