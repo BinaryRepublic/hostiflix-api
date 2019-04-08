@@ -9,6 +9,7 @@ data class Job (
     @Id
     var id: String,
 
+    @Enumerated(EnumType.STRING)
     var status: JobStatus,
 
     @Column(nullable = false, updatable = false)
