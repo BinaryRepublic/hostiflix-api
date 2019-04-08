@@ -1,7 +1,6 @@
-package com.hostiflix
+package com.hostiflix.service
 
 import com.hostiflix.repository.CustomerRepository
-import com.hostiflix.service.CustomerService
 import com.hostiflix.support.MockData
 import com.nhaarman.mockito_kotlin.given
 import org.assertj.core.api.Assertions.assertThat

@@ -1,12 +1,10 @@
-package com.hostiflix
+package com.hostiflix.service
 
 import com.hostiflix.config.GithubConfig
 import com.hostiflix.entity.AuthCredentials
 import com.hostiflix.entity.GithubLoginState
 import com.hostiflix.repository.AuthCredentialsRepository
 import com.hostiflix.repository.GithubLoginStateRepository
-import com.hostiflix.service.AuthenticationService
-import com.hostiflix.service.CustomerService
 import com.hostiflix.support.MockData
 import com.hostiflix.webservice.githubWs.GithubWsImpl
 import com.nhaarman.mockito_kotlin.any

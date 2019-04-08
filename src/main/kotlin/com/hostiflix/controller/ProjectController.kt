@@ -23,10 +23,10 @@ class ProjectController(
 
     @GetMapping("/{id}")
     fun findById(
-        @PathVariable
-        id: String,
         @RequestHeader("Access-Token")
-        accessToken: String
+        accessToken: String,
+        @PathVariable
+        id: String
     ): ResponseEntity<*> {
         val project = projectService.findProjectByIdAndAccessToken(id, accessToken)
 
@@ -44,18 +44,20 @@ class ProjectController(
         @RequestHeader("Access-Token")
         accessToken: String
     ): ResponseEntity<*> {
-        return ResponseEntity.status(201).body(projectService.saveProject(newProject, accessToken))
+        val createdProject = projectService.createProject(newProject, accessToken)
+
+        return ResponseEntity.status(201).body(createdProject)
     }
 
     @PutMapping
     fun update(
-        @RequestBody
-        newProject: Project,
         @RequestHeader("Access-Token")
-        accessToken: String
+        accessToken: String,
+        @RequestBody
+        newProject: Project
     ): ResponseEntity<*> {
         return if (projectService.hasAccessToProject(newProject.id!!, accessToken)){
-            ResponseEntity.ok().body(projectService.saveProject(newProject, accessToken))
+            ResponseEntity.ok().body(projectService.updateProject(newProject, accessToken))
         } else {
             ResponseEntity.badRequest().body(hashMapOf("error" to "invalid project-id or not authorized to access resource"))
         }
@@ -63,10 +65,10 @@ class ProjectController(
 
     @DeleteMapping("/{id}")
     fun deleteById(
-        @PathVariable
-        id: String,
         @RequestHeader("Access-Token")
-        accessToken: String
+        accessToken: String,
+        @PathVariable
+        id: String
     ): ResponseEntity<*> {
         return if (projectService.hasAccessToProject(id, accessToken)){
             projectService.deleteProject(id)

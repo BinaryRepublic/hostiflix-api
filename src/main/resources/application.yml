@@ -1,6 +1,8 @@
-noAccessTokenRequiredEndpoints: /auth
+noAccessTokenRequiredEndpoints: /auth, /github/webhook
 
 defaultRedirectUrl: http://localhost:3000/github-redirect
+
+deploymentServiceUrl: http://deployment-service/jobs/submit
 
 github:
   login-base: https://github.com/login/oauth/
@@ -9,6 +11,9 @@ github:
   api-base: https://api.github.com/
   api-user: user
   api-emails: user/emails
+  api-repos: user/repos
+  api-branches: repos/{owner}/{repo}/branches
+  api-webhook: repos/{owner}/{repo}/hooks
 
 spring:
   profiles:

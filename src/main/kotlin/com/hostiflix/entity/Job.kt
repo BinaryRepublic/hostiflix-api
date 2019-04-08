@@ -1,16 +1,13 @@
 package com.hostiflix.entity
 
 import com.fasterxml.jackson.annotation.JsonBackReference
-import org.hibernate.annotations.GenericGenerator
 import java.time.Instant
 import javax.persistence.*
 
 @Entity
-class Job (
+data class Job (
     @Id
-    @GeneratedValue(generator = "system-uuid")
-    @GenericGenerator(name = "system-uuid", strategy = "uuid2")
-    var id: String? = null,
+    var id: String,
 
     var status: JobStatus,
 
@@ -19,14 +16,14 @@ class Job (
 
     var finishedAt: Instant? = null
 ) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
+    lateinit var branch: Branch
+
     @PrePersist
     fun prePersist() {
         createdAt = Instant.now()
     }
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonBackReference
-    lateinit var branch: Branch
 }
 
 enum class JobStatus {

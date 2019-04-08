@@ -12,4 +12,6 @@ interface ProjectRepository : CrudRepository<Project, String> {
     fun findByIdAndCustomerId(id: String, customerId: String): Project?
 
     fun existsByIdAndCustomerId(id: String, customerId: String): Boolean
+
+    fun findByRepositoryOwnerAndRepositoryName(repositoryOwner: String, repositoryName: String) : Project?
 }

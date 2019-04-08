@@ -49,12 +49,32 @@ class ProjectIntegrationTest: BaseIntegrationTest() {
             .log().ifValidationFails()
             .statusCode(HttpStatus.OK.value())
             .body("name", `is`(project.name))
-            .body("repository", `is`(project.repository))
-            .body("projectType", `is`(project.projectType))
-            .body("branches[0].id", isOneOf(project.branches[0].id, project.branches[1].id))
-            .body("branches[0].name", isOneOf(project.branches[0].name, project.branches[1].name))
-            .body("branches[1].id", isOneOf(project.branches[0].id, project.branches[1].id))
-            .body("branches[1].name", isOneOf(project.branches[0].name, project.branches[1].name))
+            .body("hash", `is`(project.hash))
+            .body("name", `is`(project.name))
+            .body("repositoryOwner", `is`(project.repositoryOwner))
+            .body("repositoryName", `is`(project.repositoryName))
+            .body("type", `is`(project.type))
+            .body("startCode", `is`(project.startCode))
+            .body("buildCode", `is`(project.buildCode))
+            .body("createdAt", `is`(project.createdAt.toString()))
+            .body("branches[0].id", `is`(project.branches[0].id))
+            .body("branches[0].name", `is`(project.branches[0].name))
+            .body("branches[0].subDomain", `is`(project.branches[0].subDomain))
+            .body("branches[0].jobs[0].id", `is`(project.branches[0].jobs[0].id))
+            .body("branches[0].jobs[0].status", `is`(project.branches[0].jobs[0].status.toString()))
+            .body("branches[0].jobs[0].createdAt", `is`(project.branches[0].jobs[0].createdAt.toString()))
+            .body("branches[0].jobs[1].id", `is`(project.branches[0].jobs[1].id))
+            .body("branches[0].jobs[1].status", `is`(project.branches[0].jobs[1].status.toString()))
+            .body("branches[0].jobs[1].createdAt", `is`(project.branches[0].jobs[1].createdAt.toString()))
+            .body("branches[1].id", `is`(project.branches[1].id))
+            .body("branches[1].name", `is`(project.branches[1].name))
+            .body("branches[1].subDomain", `is`(project.branches[1].subDomain))
+            .body("branches[1].jobs[0].id", `is`(project.branches[1].jobs[0].id))
+            .body("branches[1].jobs[0].status", `is`(project.branches[1].jobs[0].status.toString()))
+            .body("branches[1].jobs[0].createdAt", `is`(project.branches[1].jobs[0].createdAt.toString()))
+            .body("branches[1].jobs[1].id", `is`(project.branches[1].jobs[1].id))
+            .body("branches[1].jobs[1].status", `is`(project.branches[1].jobs[1].status.toString()))
+            .body("branches[1].jobs[1].createdAt", `is`(project.branches[1].jobs[1].createdAt.toString()))
     }
 
     @Test
@@ -73,13 +93,13 @@ class ProjectIntegrationTest: BaseIntegrationTest() {
     }
 
     @Test
-    fun `should create project`() {
+    fun `should create project and ignore passed jobs`() {
         val newProject = MockData.project("3").apply {
-            customerId = null
+            customerId = testCustomer!!.id
         }
         val body = objectMapper.writeValueAsString(newProject)
 
-         RestAssured
+        RestAssured
             .given()
             .header("Access-Token", accessToken)
             .contentType(ContentType.JSON)
@@ -89,26 +109,39 @@ class ProjectIntegrationTest: BaseIntegrationTest() {
             .log().ifValidationFails()
             .statusCode(HttpStatus.CREATED.value())
             .body("name", `is`(newProject.name))
-            .body("repository", `is`(newProject.repository))
+            .body("hash", `is`(newProject.hash))
+            .body("name", `is`(newProject.name))
+            .body("repositoryOwner", `is`(newProject.repositoryOwner))
+            .body("repositoryName", `is`(newProject.repositoryName))
+            .body("type", `is`(newProject.type))
+            .body("startCode", `is`(newProject.startCode))
+            .body("buildCode", `is`(newProject.buildCode))
             .body("branches[0].name", `is`(newProject.branches[0].name))
+            .body("branches[0].subDomain", `is`(newProject.branches[0].subDomain))
+            .body("branches[0].jobs", nullValue())
             .body("branches[1].name", `is`(newProject.branches[1].name))
-            .body("branches[1].jobs[0].status", `is`(newProject.branches[1].jobs[0].status.toString()))
+            .body("branches[1].subDomain", `is`(newProject.branches[1].subDomain))
+            .body("branches[1].jobs", nullValue())
 
         val projectList = projectRepository.findAll().toList()
         val project = projectList.first()
 
         assertThat(projectList.size).isEqualTo(1)
         assertThat(project.branches.size).isEqualTo(2)
+        assertThat(project.branches.first().jobs).isEmpty()
     }
 
     @Test
-    fun `should update project`() {
+    fun `should update project without touching jobs`() {
         val mockProject = MockData.project("4", testCustomer!!.id!!)
-        project = projectRepository.save(mockProject)
-        val updatedProject = project.apply {
+        val project = projectRepository.save(mockProject)
+        val updatedProject = project.copy()
+        updatedProject.apply {
             name = "updated"
             customerId = null
+            branches = branches.map { it.copy().apply { jobs = mutableListOf(MockData.job("12345", it)) } }
         }
+
         val body = objectMapper.writeValueAsString(updatedProject)
 
         RestAssured
@@ -120,13 +153,33 @@ class ProjectIntegrationTest: BaseIntegrationTest() {
             .then()
             .log().ifValidationFails()
             .statusCode(HttpStatus.OK.value())
-            .body("id", `is`(project.id))
+            .body("id", `is`(updatedProject.id))
             .body("name", `is`("updated"))
-            .body("repository", `is`(project.repository))
-            .body("branches[0].id", `is`(project.branches[0].id))
-            .body("branches[0].name", `is`(project.branches[0].name))
-            .body("branches[1].id", `is`(project.branches[1].id))
-            .body("branches[1].name", `is`(project.branches[1].name))
+            .body("hash", `is`(updatedProject.hash))
+            .body("repositoryOwner", `is`(updatedProject.repositoryOwner))
+            .body("repositoryName", `is`(updatedProject.repositoryName))
+            .body("type", `is`(updatedProject.type))
+            .body("startCode", `is`(updatedProject.startCode))
+            .body("buildCode", `is`(updatedProject.buildCode))
+            .body("createdAt", `is`(updatedProject.createdAt.toString()))
+            .body("branches[0].id", `is`(updatedProject.branches[0].id))
+            .body("branches[0].name", `is`(updatedProject.branches[0].name))
+            .body("branches[0].subDomain", `is`(updatedProject.branches[0].subDomain))
+            .body("branches[0].jobs[0].id", `is`(project.branches[0].jobs[0].id))
+            .body("branches[0].jobs[0].status", `is`(project.branches[0].jobs[0].status.toString()))
+            .body("branches[0].jobs[0].createdAt", `is`(project.branches[0].jobs[0].createdAt.toString()))
+            .body("branches[0].jobs[1].id", `is`(project.branches[0].jobs[1].id))
+            .body("branches[0].jobs[1].status", `is`(project.branches[0].jobs[1].status.toString()))
+            .body("branches[0].jobs[1].createdAt", `is`(project.branches[0].jobs[1].createdAt.toString()))
+            .body("branches[1].id", `is`(updatedProject.branches[1].id))
+            .body("branches[1].name", `is`(updatedProject.branches[1].name))
+            .body("branches[1].subDomain", `is`(updatedProject.branches[1].subDomain))
+            .body("branches[1].jobs[0].id", `is`(project.branches[1].jobs[0].id))
+            .body("branches[1].jobs[0].status", `is`(project.branches[1].jobs[0].status.toString()))
+            .body("branches[1].jobs[0].createdAt", `is`(project.branches[1].jobs[0].createdAt.toString()))
+            .body("branches[1].jobs[1].id", `is`(project.branches[1].jobs[1].id))
+            .body("branches[1].jobs[1].status", `is`(project.branches[1].jobs[1].status.toString()))
+            .body("branches[1].jobs[1].createdAt", `is`(project.branches[1].jobs[1].createdAt.toString()))
 
         val projectResult = projectRepository.findById(project.id!!)
         assertThat(projectResult.get().id).isEqualTo(project.id)

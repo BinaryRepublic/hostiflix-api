@@ -38,7 +38,7 @@ class AuthFilter (
         val isAuthenticated = accessToken?.takeIf { authenticationService.isAuthenticated(it) } != null
         val skipAuthentication = !noAccessTokenRequiredEndpoints.firstOrNull{ path.startsWith(it) }.isNullOrEmpty()
 
-        if (skipAuthentication || isAuthenticated ) {
+        if (skipAuthentication || isAuthenticated) {
             chain.doFilter(request, response)
         } else {
             (response as HttpServletResponse).status = 403

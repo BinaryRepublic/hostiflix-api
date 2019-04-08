@@ -46,6 +46,11 @@ dependencies {
 	implementation "redis.clients:jedis:2.9.0"
 	implementation "com.google.cloud.sql:postgres-socket-factory:1.0.12"
 	implementation "com.h2database:h2:1.4.197"
+	implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.0"
+	implementation "com.fasterxml.jackson.core:jackson-annotations:2.9.0"
+	implementation "com.fasterxml.jackson.core:jackson-core:2.9.0"
+	implementation "com.fasterxml.jackson.core:jackson-databind:2.9.0"
+	implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.0"
 
 	testImplementation "org.springframework.boot:spring-boot-starter-test"
 	testImplementation "com.nhaarman:mockito-kotlin:1.6.0"

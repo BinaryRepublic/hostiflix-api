@@ -84,4 +84,6 @@ class AuthenticationService (
     fun getCustomerIdByAccessToken(accessToken: String): String? {
         return authCredentialsRepository.findByGithubAccessToken(accessToken)?.customerId
     }
+
+    fun findAuthCredentialsByCustomerId(customerId : String) = authCredentialsRepository.findByCustomerIdAndLatest(customerId, true)
 }
