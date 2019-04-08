@@ -1,6 +1,12 @@
 package com.hostiflix.dto
 
+import org.springframework.beans.factory.annotation.Value
+
 class GithubWebhookRequestConfigDto {
-    val url = "http://8d1be3f3.ngrok.io/github/webhook"
+
+    @Value("\${webhookPayloadUrl}")
+    private lateinit var webhookPayloadUrl: String
+
+    val url = webhookPayloadUrl
     val content_type = "json"
 }

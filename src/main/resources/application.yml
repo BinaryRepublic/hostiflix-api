@@ -6,6 +6,8 @@ hostiflix-login-redirect:
 
 deploymentServiceUrl: http://deployment-service/jobs/submit
 
+webhookPayloadUrl: https://api.hostiflix.com/github/webhook
+
 github:
   login-base: https://github.com/login/oauth/
   login-redirect: https://api.hostiflix.com/auth/getRedirectUrl/{environment}
