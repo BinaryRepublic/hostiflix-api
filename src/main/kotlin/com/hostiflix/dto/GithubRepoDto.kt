@@ -13,7 +13,8 @@ class GithubRepoDto {
     @JsonSetter("default_branch")
     lateinit var defaultBranch : String
 
-    @JsonIgnore
+    @get:JsonIgnore
+    @set:JsonProperty
     lateinit var owner : GithubRepoOwnerDto
 
     @JsonProperty

@@ -123,9 +123,11 @@ class GithubControllerTest {
             .andExpect(MockMvcResultMatchers.jsonPath("$.repos[0].id", `is`(repo1.id)))
             .andExpect(MockMvcResultMatchers.jsonPath("$.repos[0].fullName", `is`(repo1.fullName)))
             .andExpect(MockMvcResultMatchers.jsonPath("$.repos[0].defaultBranch", `is`(repo1.defaultBranch)))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.repos[0].owner", `is`(repo1.owner.login)))
             .andExpect(MockMvcResultMatchers.jsonPath("$.repos[1].id", `is`(repo2.id)))
             .andExpect(MockMvcResultMatchers.jsonPath("$.repos[1].fullName", `is`(repo2.fullName)))
             .andExpect(MockMvcResultMatchers.jsonPath("$.repos[1].defaultBranch", `is`(repo2.defaultBranch)))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.repos[1].owner", `is`(repo2.owner.login)))
     }
 
     @Test

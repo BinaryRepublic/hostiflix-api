@@ -1,9 +1,6 @@
 package com.hostiflix.webservice.githubWs
 
-import com.hostiflix.dto.GithubBranchDto
-import com.hostiflix.dto.GithubCustomerDto
-import com.hostiflix.dto.GithubEmailResponseDto
-import com.hostiflix.dto.GithubRepoDto
+import com.hostiflix.dto.*
 import com.hostiflix.entity.Project
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Service
@@ -35,6 +32,9 @@ class GithubWsMock : GithubWs {
             id = "id"
             fullName = "fullName"
             defaultBranch = "defaultBranch"
+            owner = GithubRepoOwnerDto().apply {
+                login = "login"
+            }
         })
     }
 
