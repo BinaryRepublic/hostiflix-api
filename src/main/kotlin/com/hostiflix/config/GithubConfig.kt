@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration
 @ConfigurationProperties("github")
 class GithubConfig {
     lateinit var loginBase : String
-    lateinit var loginRedirect : String
+    lateinit var loginAuthorize : String
     lateinit var loginGetAccessToken : String
     lateinit var apiBase : String
     lateinit var apiUser : String

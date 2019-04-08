@@ -2,6 +2,7 @@ package com.hostiflix.service
 
 import com.hostiflix.config.GithubConfig
 import com.hostiflix.dto.GithubCustomerDto
+import com.hostiflix.dto.GithubRedirectEnvironment
 import com.hostiflix.entity.AuthCredentials
 import com.hostiflix.entity.Customer
 import com.hostiflix.entity.GithubApplicationScope
@@ -9,7 +10,9 @@ import com.hostiflix.entity.GithubLoginState
 import com.hostiflix.repository.AuthCredentialsRepository
 import com.hostiflix.repository.GithubLoginStateRepository
 import com.hostiflix.webservice.githubWs.GithubWs
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import org.springframework.web.util.UriComponentsBuilder
 
 @Service
 class AuthenticationService (
@@ -19,20 +22,39 @@ class AuthenticationService (
         private val githubWs: GithubWs,
         private val githubConfig: GithubConfig
 ){
-    fun buildNewRedirectUrlForGithub() : String {
-        val githubRedirectUrl = githubConfig.loginBase + githubConfig.loginRedirect
+    @Value("\${hostiflix-login-redirect.prod}")
+    private lateinit var hostiflixLoginRedirectProd: String
+
+    @Value("\${hostiflix-login-redirect.dev}")
+    private lateinit var hostiflixLoginRedirectDev: String
+
+    fun buildGithubAuthorizeUrl(environment: GithubRedirectEnvironment) : String {
+        val githubAuthorizeUrl = githubConfig.loginBase + githubConfig.loginAuthorize
         val state = createAndStoreNewGithubState()
         val scope = listOf(GithubApplicationScope.REPO, GithubApplicationScope.USER)
 
-        return githubRedirectUrl
+        return githubAuthorizeUrl
             .replace("{state}", state)
             .replace("{scope}", scope.joinToString(","))
+            .replace("{environment}", environment.toString())
     }
 
     fun createAndStoreNewGithubState() : String {
         val newState = GithubLoginState()
 
         return githubLoginStateRepository.save(newState).id
+    }
+
+    fun buildRedirectUrl(code: String, state: String, environment: GithubRedirectEnvironment): String {
+        val hostiflixLoginRedirect = when(environment) {
+            GithubRedirectEnvironment.PRODUCTION -> hostiflixLoginRedirectProd
+            GithubRedirectEnvironment.DEVELOPMENT -> hostiflixLoginRedirectDev
+        }
+        return UriComponentsBuilder
+            .fromUriString(hostiflixLoginRedirect)
+            .queryParam("code", code)
+            .queryParam("state", state)
+            .build().toUriString()
     }
 
     fun authenticateOnGithubAndReturnAccessToken(code : String, state : String) : String? {

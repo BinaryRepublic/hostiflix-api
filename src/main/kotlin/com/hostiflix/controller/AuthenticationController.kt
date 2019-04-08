@@ -1,22 +1,37 @@
 package com.hostiflix.controller
 
+import com.hostiflix.dto.GithubRedirectEnvironment
 import com.hostiflix.service.AuthenticationService
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
+import org.springframework.web.servlet.view.RedirectView
 
 @RestController
 @RequestMapping("/auth")
 class AuthenticationController (
     private val authenticationService: AuthenticationService
-){
-    @GetMapping("/login")
-    fun buildNewRedirectUrlForGithub(): ResponseEntity<*> {
-        val githubRedirectUrl = authenticationService.buildNewRedirectUrlForGithub()
+) {
 
-        return ResponseEntity.ok().body(hashMapOf("redirectUrlGithub" to githubRedirectUrl))
+    @GetMapping("/login")
+    fun getGithubAuthorizeUrl(
+        @RequestParam
+        environment: GithubRedirectEnvironment?
+    ): ResponseEntity<*> {
+        val githubAuthorizeUrl = authenticationService.buildGithubAuthorizeUrl(environment ?: GithubRedirectEnvironment.PRODUCTION)
+
+        return ResponseEntity.ok().body(hashMapOf("githubAuthorizeUrl" to githubAuthorizeUrl))
+    }
+
+    @GetMapping("/getRedirectUrl/{environment}")
+    fun getRedirectUrl(
+        @RequestParam
+        code: String,
+        @RequestParam
+        state: String,
+        @PathVariable("environment")
+        environment: GithubRedirectEnvironment
+    ): RedirectView {
+        return RedirectView(authenticationService.buildRedirectUrl(code, state, environment))
     }
 
     @GetMapping("/getAccessToken")
