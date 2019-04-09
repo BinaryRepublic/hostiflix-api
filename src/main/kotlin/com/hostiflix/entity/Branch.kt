@@ -1,7 +1,6 @@
 package com.hostiflix.entity
 
 import com.fasterxml.jackson.annotation.JsonBackReference
-import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.hibernate.annotations.GenericGenerator
@@ -25,9 +24,7 @@ data class Branch(
         mappedBy = "branch"
     )
     @JsonManagedReference
-    @get:JsonProperty
-    @field:JsonIgnore
-    @set:JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     var jobs: MutableList<Job> = mutableListOf()
 
     @ManyToOne(fetch = FetchType.LAZY)
