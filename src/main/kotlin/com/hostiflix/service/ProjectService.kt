@@ -1,13 +1,19 @@
 package com.hostiflix.service
 
 import com.hostiflix.entity.Project
+import com.hostiflix.entity.ProjectHash
+import com.hostiflix.repository.ProjectHashRepository
 import com.hostiflix.repository.ProjectRepository
+import com.hostiflix.support.BadRequestException
 import com.hostiflix.webservice.githubWs.GithubWs
 import org.springframework.stereotype.Service
+import java.util.*
+import javax.transaction.Transactional
 
 @Service
 class ProjectService (
     private val projectRepository: ProjectRepository,
+    private val projectHashRepository: ProjectHashRepository,
     private val githubWs: GithubWs,
     private val authenticationService: AuthenticationService
 ) {
@@ -29,10 +35,16 @@ class ProjectService (
         return projectRepository.save(project)
     }
 
+    @Transactional
     fun createProject(newProject: Project, accessToken: String) : Project {
-        githubWs.createWebhook(accessToken, newProject)
+        val projectHash = newProject.assignHash?.let { hash ->
+            projectHashRepository.findById(hash).takeIf { it.isPresent }?.get()
+        } ?: throw BadRequestException("project hash is missing or invalid")
 
-        return saveProject(newProject, accessToken)
+        newProject.projectHash = projectHash
+        val createdProject = saveProject(newProject, accessToken)
+        githubWs.createWebhook(accessToken, newProject)
+        return createdProject
     }
 
     fun updateProject(newProject: Project, accessToken: String): Project {
@@ -41,10 +53,19 @@ class ProjectService (
             val currentJobs = currentProject.branches.first { it.id == updatedBranch.id }.jobs
             updatedBranch.jobs = currentJobs
         }
+        newProject.projectHash = currentProject.projectHash
         return saveProject(newProject, accessToken)
     }
 
     fun deleteProject(id: String) = projectRepository.deleteById(id)
+
+    fun createProjectHash(): String {
+        var randomHash: String?
+        do {
+            randomHash = UUID.randomUUID().toString().subSequence(0, 3).toString()
+        } while (projectHashRepository.existsById(randomHash!!))
+        return projectHashRepository.save(ProjectHash(randomHash)).id
+    }
 
     private fun getCustomerId(accessToken: String): String {
         return authenticationService.getCustomerIdByAccessToken(accessToken)!!

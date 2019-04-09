@@ -17,8 +17,6 @@ data class Project(
     @JsonIgnore
     var customerId: String? = null,
 
-    val hash: String,
-
     var name: String,
 
     var repositoryOwner: String,
@@ -45,6 +43,18 @@ data class Project(
     @NotEmpty
     var branches: List<Branch>
 ) {
+    @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true)
+    @JsonIgnore
+    var projectHash: ProjectHash? = null
+
+    var hash: String?
+        get() = projectHash?.id
+        set(value) { assignHash = value }
+
+    @Transient
+    @JsonIgnore
+    var assignHash: String? = null
+
     @PrePersist
     fun prePersist() {
         createdAt = Instant.now()

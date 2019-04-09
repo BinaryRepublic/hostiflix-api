@@ -58,6 +58,9 @@ abstract class BaseIntegrationTest {
     lateinit var projectRepository: ProjectRepository
 
     @Autowired
+    lateinit var projectHashRepository: ProjectHashRepository
+
+    @Autowired
     lateinit var jobRepository: JobRepository
 
     @Autowired
@@ -80,6 +83,7 @@ abstract class BaseIntegrationTest {
     @After
     fun clearDatabase() {
         projectRepository.deleteAll()
+        projectHashRepository.deleteAll()
         authCredentialsRepository.deleteAll()
         customerRepository.deleteAll()
         githubLoginStateRepository.deleteAll()

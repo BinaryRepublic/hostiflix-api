@@ -39,7 +39,7 @@ class JsonObjectMapperTest {
         val jsonString = objectMapper.writeValueAsString(project)
 
         /* Then */
-        assertThat(jsonString).isEqualTo("{\"id\":\"1\",\"hash\":\"hash_1\",\"name\":\"name_1\",\"repositoryOwner\":\"repositoryOwner_1\",\"repositoryName\":\"repositoryName_1\",\"type\":\"NODEJS\",\"startCode\":\"startCode_1\",\"buildCode\":\"buildCode_1\",\"createdAt\":\"2019-04-01T00:00:00Z\",\"branches\":[{\"id\":\"1\",\"name\":\"name_1\",\"subDomain\":\"subDomain_1\",\"jobs\":[{\"id\":\"1\",\"status\":\"BUILD_SCHEDULED\",\"createdAt\":\"2019-04-01T00:00:00Z\"},{\"id\":\"1\",\"status\":\"BUILD_SCHEDULED\",\"createdAt\":\"2019-04-01T00:00:00Z\"}]},{\"id\":\"2\",\"name\":\"name_2\",\"subDomain\":\"subDomain_2\",\"jobs\":[{\"id\":\"1\",\"status\":\"BUILD_SCHEDULED\",\"createdAt\":\"2019-04-01T00:00:00Z\"},{\"id\":\"1\",\"status\":\"BUILD_SCHEDULED\",\"createdAt\":\"2019-04-01T00:00:00Z\"}]}]}")
+        assertThat(jsonString).isEqualTo("{\"id\":\"1\",\"name\":\"name_1\",\"repositoryOwner\":\"repositoryOwner_1\",\"repositoryName\":\"repositoryName_1\",\"type\":\"NODEJS\",\"startCode\":\"startCode_1\",\"buildCode\":\"buildCode_1\",\"createdAt\":\"2019-04-01T00:00:00Z\",\"branches\":[{\"id\":\"1\",\"name\":\"name_1\",\"subDomain\":\"subDomain_1\",\"jobs\":[{\"id\":\"1\",\"status\":\"BUILD_SCHEDULED\",\"createdAt\":\"2019-04-01T00:00:00Z\"},{\"id\":\"1\",\"status\":\"BUILD_SCHEDULED\",\"createdAt\":\"2019-04-01T00:00:00Z\"}]},{\"id\":\"2\",\"name\":\"name_2\",\"subDomain\":\"subDomain_2\",\"jobs\":[{\"id\":\"1\",\"status\":\"BUILD_SCHEDULED\",\"createdAt\":\"2019-04-01T00:00:00Z\"},{\"id\":\"1\",\"status\":\"BUILD_SCHEDULED\",\"createdAt\":\"2019-04-01T00:00:00Z\"}]}],\"hash\":\"1\"}")
     }
 
     @Test
