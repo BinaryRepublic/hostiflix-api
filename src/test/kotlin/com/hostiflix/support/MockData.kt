@@ -25,7 +25,7 @@ object MockData {
             "name_$testId",
             "repositoryOwner_$testId",
             "repositoryName_$testId",
-            ProjectType.NODEJS.toString(),
+            ProjectType.NODEJS,
             "startCode_$testId",
             "buildCode_$testId",
             Instant.parse("2019-04-01T00:00:00Z"),
@@ -110,6 +110,13 @@ object MockData {
             id = testId
             fullName = "fullName_$testId"
             defaultBranch = "defaultBranch_$testId"
+            owner = githubRepoOwnerDto()
+        }
+    }
+
+    fun githubRepoOwnerDto(): GithubRepoOwnerDto {
+        return GithubRepoOwnerDto().apply {
+            login = "login"
         }
     }
 

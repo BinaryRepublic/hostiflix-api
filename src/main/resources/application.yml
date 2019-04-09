@@ -4,7 +4,9 @@ hostiflix-login-redirect:
   prod: https://hostiflix.com/github-redirect
   dev: http://localhost:3000/github-redirect
 
-deploymentServiceUrl: http://deployment-service/jobs/submit
+deployment-service-url: http://deployment-service/jobs/submit
+
+hostiflix-github-webhook: https://api.hostiflix.com/github/webhook
 
 github:
   login-base: https://github.com/login/oauth/

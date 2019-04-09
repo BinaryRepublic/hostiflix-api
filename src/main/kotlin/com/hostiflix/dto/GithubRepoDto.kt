@@ -1,5 +1,7 @@
 package com.hostiflix.dto
 
+import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonSetter
 
 class GithubRepoDto {
@@ -10,4 +12,14 @@ class GithubRepoDto {
 
     @JsonSetter("default_branch")
     lateinit var defaultBranch : String
+
+    @get:JsonIgnore
+    @field:JsonIgnore
+    @set:JsonProperty
+    lateinit var owner : GithubRepoOwnerDto
+
+    @JsonProperty
+    fun owner(): String {
+        return owner.login
+    }
 }

@@ -25,7 +25,8 @@ data class Project(
 
     var repositoryName: String,
 
-    val type: String,
+    @Enumerated(EnumType.STRING)
+    val type: ProjectType,
 
     val startCode: String,
 
