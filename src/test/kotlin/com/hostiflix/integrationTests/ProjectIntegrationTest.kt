@@ -1,6 +1,7 @@
 package com.hostiflix.integrationTests
 
 import com.hostiflix.entity.Project
+import com.hostiflix.entity.ProjectHash
 import com.hostiflix.support.MockData
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
@@ -49,7 +50,7 @@ class ProjectIntegrationTest: BaseIntegrationTest() {
             .log().ifValidationFails()
             .statusCode(HttpStatus.OK.value())
             .body("name", `is`(project.name))
-            .body("hash", `is`(project.hash))
+            .body("hash", `is`(project.projectHash!!.id))
             .body("name", `is`(project.name))
             .body("repositoryOwner", `is`(project.repositoryOwner))
             .body("repositoryName", `is`(project.repositoryName))
@@ -94,9 +95,8 @@ class ProjectIntegrationTest: BaseIntegrationTest() {
 
     @Test
     fun `should create project and ignore passed jobs`() {
-        val newProject = MockData.project("3").apply {
-            customerId = testCustomer!!.id
-        }
+        projectHashRepository.save(ProjectHash("ph1"))
+        val newProject = MockData.project("3", testCustomer!!.id!!, "ph1")
         val body = objectMapper.writeValueAsString(newProject)
 
         RestAssured
@@ -132,7 +132,26 @@ class ProjectIntegrationTest: BaseIntegrationTest() {
     }
 
     @Test
-    fun `should update project without touching jobs`() {
+    fun `should not create project if project hash is not existing`() {
+        val newProject = MockData.project("3", testCustomer!!.id!!, "ph1")
+        val body = objectMapper.writeValueAsString(newProject)
+
+        RestAssured
+            .given()
+            .header("Access-Token", accessToken)
+            .contentType(ContentType.JSON)
+            .body(body)
+            .post()
+            .then()
+            .log().ifValidationFails()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+
+        val projectList = projectRepository.findAll().toList()
+        assertThat(projectList.size).isEqualTo(0)
+    }
+
+    @Test
+    fun `should update project without touching jobs and project hash`() {
         val mockProject = MockData.project("4", testCustomer!!.id!!)
         val project = projectRepository.save(mockProject)
         val updatedProject = project.copy()
@@ -140,6 +159,7 @@ class ProjectIntegrationTest: BaseIntegrationTest() {
             name = "updated"
             customerId = null
             branches = branches.map { it.copy().apply { jobs = mutableListOf(MockData.job("12345", it)) } }
+            hash = "upd"
         }
 
         val body = objectMapper.writeValueAsString(updatedProject)
@@ -155,7 +175,7 @@ class ProjectIntegrationTest: BaseIntegrationTest() {
             .statusCode(HttpStatus.OK.value())
             .body("id", `is`(updatedProject.id))
             .body("name", `is`("updated"))
-            .body("hash", `is`(updatedProject.hash))
+            .body("hash", `is`(project.hash))
             .body("repositoryOwner", `is`(updatedProject.repositoryOwner))
             .body("repositoryName", `is`(updatedProject.repositoryName))
             .body("type", `is`(updatedProject.type.toString()))
@@ -245,5 +265,72 @@ class ProjectIntegrationTest: BaseIntegrationTest() {
 
         val projectList = projectRepository.findAll().toList()
         assertThat(projectList.size).isEqualTo(1)
+    }
+
+    @Test
+    fun `should return new project hash and save into database`() {
+        // given, when, then
+        RestAssured
+            .given()
+            .header("Access-Token", accessToken)
+            .contentType(ContentType.JSON)
+            .get("/hash")
+            .then()
+            .log().ifValidationFails()
+            .statusCode(HttpStatus.OK.value())
+            .body("hash", notNullValue())
+
+        var projectHashes = projectHashRepository.findAll()
+        assertThat(projectHashes.toList().size).isEqualTo(1)
+        assertThat(projectHashes.first().id).isNotNull()
+        assertThat(projectHashes.first().createdAt).isNotNull()
+
+        RestAssured
+            .given()
+            .header("Access-Token", accessToken)
+            .contentType(ContentType.JSON)
+            .get("/hash")
+            .then()
+            .log().ifValidationFails()
+            .statusCode(HttpStatus.OK.value())
+            .body("hash", notNullValue())
+
+        projectHashes = projectHashRepository.findAll()
+        assertThat(projectHashes.toList().size).isEqualTo(2)
+    }
+
+    @Test
+    fun `should get project hash and create a new project with it`() {
+        // given, when, then
+        val projectHash = RestAssured
+            .given()
+            .header("Access-Token", accessToken)
+            .contentType(ContentType.JSON)
+            .get("/hash")
+            .then()
+            .log().ifValidationFails()
+            .statusCode(HttpStatus.OK.value())
+            .body("hash", notNullValue())
+            .extract()
+            .path<String>("hash")
+
+        val newProject = MockData.project("3", testCustomer!!.id!!, projectHash)
+        val body = objectMapper.writeValueAsString(newProject)
+
+        RestAssured
+            .given()
+            .header("Access-Token", accessToken)
+            .contentType(ContentType.JSON)
+            .body(body)
+            .post()
+            .then()
+            .log().ifValidationFails()
+            .statusCode(HttpStatus.CREATED.value())
+
+        val projectHashes = projectHashRepository.findAll()
+        assertThat(projectHashes.toList().size).isEqualTo(1)
+
+        val projects = projectRepository.findAll()
+        assertThat(projects.toList().size).isEqualTo(1)
     }
 }

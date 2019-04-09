@@ -17,11 +17,10 @@ object MockData {
         )
     }
 
-    fun project(testId : String, customerId: String = "customerId_$testId") : Project {
+    fun project(testId : String, customerId: String = "customerId_$testId", projectHashId: String = testId) : Project {
         return Project(
             testId,
             customerId,
-            "hash_$testId",
             "name_$testId",
             "repositoryOwner_$testId",
             "repositoryName_$testId",
@@ -35,6 +34,7 @@ object MockData {
                 branch("1", this),
                 branch("2", this)
             )
+            projectHash = ProjectHash(projectHashId)
         }
     }
 

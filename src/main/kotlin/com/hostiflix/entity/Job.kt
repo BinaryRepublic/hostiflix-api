@@ -27,7 +27,7 @@ data class Job (
     }
 }
 
-enum class JobStatus {
+    enum class JobStatus {
     BUILD_SCHEDULED,
     BUILD_FAILED,
     DEPLOYMENT_PENDING,

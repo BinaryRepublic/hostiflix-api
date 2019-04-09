@@ -77,4 +77,10 @@ class ProjectController(
             ResponseEntity.badRequest().body(hashMapOf("error" to "invalid project-id or not authorized to access resource"))
         }
     }
+
+    @GetMapping("/hash")
+    fun getNewProjectHash(): ResponseEntity<*> {
+        val projectHash = projectService.createProjectHash()
+        return ResponseEntity.ok(hashMapOf("hash" to projectHash))
+    }
 }
