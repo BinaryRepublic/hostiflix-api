@@ -15,7 +15,7 @@ class DeploymentWsImpl(
     private val restTemplate: RestTemplate
 ): DeploymentWs {
 
-    @Value("\${deploymentServiceUrl}")
+    @Value("\${deployment-service-url}")
     lateinit var deploymentServiceUrl : String
 
     override fun postWebhook(deploymentServiceRequestDto: DeploymentServiceRequestDto) : DeploymentServiceResponseDto {

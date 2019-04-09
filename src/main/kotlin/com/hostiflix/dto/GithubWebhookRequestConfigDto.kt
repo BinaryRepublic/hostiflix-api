@@ -4,9 +4,8 @@ import org.springframework.beans.factory.annotation.Value
 
 class GithubWebhookRequestConfigDto {
 
-    @Value("\${webhookPayloadUrl}")
-    private lateinit var webhookPayloadUrl: String
+    @Value("\${hostiflix-github-webhook}")
+    private lateinit var url: String
 
-    val url = webhookPayloadUrl
     val content_type = "json"
 }

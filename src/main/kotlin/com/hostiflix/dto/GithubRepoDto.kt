@@ -14,6 +14,7 @@ class GithubRepoDto {
     lateinit var defaultBranch : String
 
     @get:JsonIgnore
+    @field:JsonIgnore
     @set:JsonProperty
     lateinit var owner : GithubRepoOwnerDto
 
