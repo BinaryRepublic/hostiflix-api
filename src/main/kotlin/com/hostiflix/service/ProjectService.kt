@@ -38,7 +38,9 @@ class ProjectService (
     @Transactional
     fun createProject(newProject: Project, accessToken: String) : Project {
         val projectHash = newProject.assignHash?.let { hash ->
-            projectHashRepository.findById(hash).takeIf { it.isPresent }?.get()
+            projectHashRepository.findById(hash).takeIf {
+                it.isPresent && !projectRepository.existsByProjectHash(it.get())
+            }?.get()
         } ?: throw BadRequestException("project hash is missing or invalid")
 
         newProject.projectHash = projectHash

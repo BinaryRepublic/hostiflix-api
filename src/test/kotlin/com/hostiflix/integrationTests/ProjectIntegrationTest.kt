@@ -151,6 +151,29 @@ class ProjectIntegrationTest: BaseIntegrationTest() {
     }
 
     @Test
+    fun `should not create project if project hash is already in use`() {
+        val projectHash = "ph1"
+        val existingProject = MockData.project("1", testCustomer!!.id!!, projectHash)
+        projectRepository.save(existingProject)
+
+        val newProject = MockData.project("3", testCustomer!!.id!!, projectHash)
+        val body = objectMapper.writeValueAsString(newProject)
+
+        RestAssured
+            .given()
+            .header("Access-Token", accessToken)
+            .contentType(ContentType.JSON)
+            .body(body)
+            .post()
+            .then()
+            .log().ifValidationFails()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+
+        val projectList = projectRepository.findAll().toList()
+        assertThat(projectList.size).isEqualTo(1)
+    }
+
+    @Test
     fun `should update project without touching jobs and project hash`() {
         val mockProject = MockData.project("4", testCustomer!!.id!!)
         val project = projectRepository.save(mockProject)

@@ -102,6 +102,7 @@ class ProjectServiceTest {
         newProject.projectHash = null
 
         given(projectHashRepository.findById(projectHashId)).willReturn(Optional.of(projectHash))
+        given(projectRepository.existsByProjectHash(projectHash)).willReturn(false)
         given(authenticationService.getCustomerIdByAccessToken(accessToken)).willReturn(customerId)
         given(projectRepository.save<Project>(check {
             assertThat(it.id).isEqualTo(newProject.id)
@@ -126,6 +127,24 @@ class ProjectServiceTest {
         newProject.projectHash = null
 
         // when, then
+        projectService.createProject(newProject, accessToken)
+    }
+
+    @Test(expected = BadRequestException::class)
+    fun `should throw exception if project hash already in use`() {
+        // given
+        val accessToken = "accessToken"
+        val customerId = "c1"
+        val projectHashId = "ph1"
+        val projectHash = ProjectHash(projectHashId)
+        val newProject = MockData.project("p1", customerId, projectHashId)
+        newProject.hash = projectHashId
+        newProject.projectHash = null
+
+        given(projectHashRepository.findById(projectHashId)).willReturn(Optional.of(projectHash))
+        given(projectRepository.existsByProjectHash(projectHash)).willReturn(true)
+
+        // when
         projectService.createProject(newProject, accessToken)
     }
 
