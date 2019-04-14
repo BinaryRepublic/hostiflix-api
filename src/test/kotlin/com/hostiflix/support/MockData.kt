@@ -84,25 +84,25 @@ object MockData {
         )
     }
 
-    fun githubWebhookResponseDto() : GithubWebhookResponseDto {
-        return GithubWebhookResponseDto().apply {
-            ref = "refs/heads/branch"
+    fun githubWebhookResponseDto(ref: String = "refs/heads/branch") : GithubWebhookResponseDto {
+        return GithubWebhookResponseDto(
+            ref = ref,
             repository = githubWebhookResponseRepoDto()
-        }
+        )
     }
 
     private fun githubWebhookResponseRepoDto() : GithubWebhookResponseRepoDto {
-        return GithubWebhookResponseRepoDto().apply {
-            name = "name"
-            url = "https://url"
+        return GithubWebhookResponseRepoDto(
+            name = "name",
+            url = "https://url",
             owner = githubWebhookReposponseRepoOwnerDto()
-        }
+        )
     }
 
     private fun githubWebhookReposponseRepoOwnerDto() : GithubWebhookReponseRepoOwnerDto {
-        return GithubWebhookReponseRepoOwnerDto().apply {
+        return GithubWebhookReponseRepoOwnerDto(
             name = "name"
-        }
+        )
     }
 
     fun githubRepoDto(testId: String): GithubRepoDto {

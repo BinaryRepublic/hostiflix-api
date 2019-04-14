@@ -17,9 +17,9 @@ class GithubService (
     private val githubWs: GithubWs
 ) {
     fun filterWebHooksAndTriggerDeployment(githubWebhookResponseDto: GithubWebhookResponseDto) : HttpStatus {
-        val webhookBranch = githubWebhookResponseDto.ref.removePrefix("refs/heads/")
+        val webhookBranch = githubWebhookResponseDto.ref?.removePrefix("refs/heads/")
         val project = projectRepository.findByRepositoryOwnerAndRepositoryName(githubWebhookResponseDto.repository.owner.name, githubWebhookResponseDto.repository.name)!!
-        val branch = project.branches.firstOrNull { it.name == webhookBranch }
+        val branch = webhookBranch?.let { webhookBranch -> project.branches.firstOrNull { it.name == webhookBranch } }
 
         return if (branch != null){
             val startCode = project.startCode

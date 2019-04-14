@@ -9,6 +9,7 @@ class GithubConfig {
     lateinit var loginBase : String
     lateinit var loginAuthorize : String
     lateinit var loginGetAccessToken : String
+    lateinit var webhookEndpoint: String
     lateinit var apiBase : String
     lateinit var apiUser : String
     lateinit var apiEmails : String
