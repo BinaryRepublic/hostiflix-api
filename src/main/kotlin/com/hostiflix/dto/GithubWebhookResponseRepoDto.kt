@@ -1,7 +1,7 @@
 package com.hostiflix.dto
 
-class GithubWebhookResponseRepoDto {
-    lateinit var name: String
-    lateinit var url: String
-    lateinit var owner: GithubWebhookReponseRepoOwnerDto
-}
+class GithubWebhookResponseRepoDto (
+    val name: String,
+    val url: String,
+    val owner: GithubWebhookReponseRepoOwnerDto
+)

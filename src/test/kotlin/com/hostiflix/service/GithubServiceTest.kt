@@ -37,7 +37,7 @@ class GithubServiceTest {
     @Test
     fun `should filter webhooks and trigger deployment`() {
         /* Given */
-        val githubWebhookResponseDto = MockData.githubWebhookResponseDto().apply { ref = "refs/heads/name_1" }
+        val githubWebhookResponseDto = MockData.githubWebhookResponseDto("refs/heads/name_1")
         val project = MockData.project("1")
         val authCredentials = MockData.authCredentials("1")
         val deploymentServiceRequestDto = MockData.deploymentServiceRequestDto("1")

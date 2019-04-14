@@ -8,7 +8,9 @@ import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
+import org.springframework.web.client.HttpStatusCodeException
 import org.springframework.web.client.RestTemplate
 
 @Service
@@ -65,17 +67,23 @@ class GithubWsImpl(
         val headers = HttpHeaders()
         headers.setBearerAuth(accessToken)
 
-        val httpEntity = HttpEntity<Any>(GithubWebhookRequestDto(), headers)
+        val httpEntity = HttpEntity<Any>(GithubWebhookRequestDto(githubConfig.webhookEndpoint), headers)
 
-        restTemplate.exchange(
-            githubConfig.apiBase + githubConfig.apiWebhook,
-            HttpMethod.POST,
-            httpEntity,
-            Void::class.java,
-            project.repositoryOwner,
-            project.repositoryName
-        )
-
+        try {
+            restTemplate.exchange(
+                githubConfig.apiBase + githubConfig.apiWebhook,
+                HttpMethod.POST,
+                httpEntity,
+                Any::class.java,
+                project.repositoryOwner,
+                project.repositoryName
+            )
+        } catch (e: HttpStatusCodeException) {
+            when (e.statusCode) {
+                HttpStatus.OK -> return
+                else -> throw IllegalArgumentException("creating Github webhook failed with status code ${e.statusCode}, body: ${e.responseBodyAsString}")
+            }
+        }
     }
 
     override fun getAllRepos(accessToken: String) : List<GithubRepoDto> {

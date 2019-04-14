@@ -1,6 +1,6 @@
 package com.hostiflix.dto
 
-class GithubWebhookResponseDto {
-    lateinit var ref: String
-    lateinit var repository: GithubWebhookResponseRepoDto
-}
+class GithubWebhookResponseDto (
+    val ref: String? = null,
+    val repository: GithubWebhookResponseRepoDto
+)

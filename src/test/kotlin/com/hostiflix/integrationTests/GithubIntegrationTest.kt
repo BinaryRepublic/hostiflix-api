@@ -23,10 +23,7 @@ class GithubIntegrationTest: BaseIntegrationTest() {
     fun `should return http status accepted `() {
         // given
         val branch = Branch("", "master", "subDomain")
-        val githubWebhookResponseDto = MockData.githubWebhookResponseDto()
-        githubWebhookResponseDto.apply {
-            ref = "refs/heads/${branch.name}"
-        }
+        val githubWebhookResponseDto = MockData.githubWebhookResponseDto("refs/heads/${branch.name}")
         val project = projectRepository.save(
             MockData.project("1").apply {
                 val project = this
