@@ -3,6 +3,8 @@ package com.hostiflix.webservice.githubWs
 import com.hostiflix.config.GithubConfig
 import com.hostiflix.dto.*
 import com.hostiflix.entity.Project
+import com.hostiflix.support.BadRequestException
+import com.hostiflix.support.UnprocessableEntityException
 import org.springframework.context.annotation.Profile
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpEntity
@@ -79,9 +81,12 @@ class GithubWsImpl(
                 project.repositoryName
             )
         } catch (e: HttpStatusCodeException) {
+            val errorMessage = "Github webhook creation failed with status code ${e.statusCode}, body: ${e.responseBodyAsString}"
             when (e.statusCode) {
                 HttpStatus.OK -> return
-                else -> throw IllegalArgumentException("creating Github webhook failed with status code ${e.statusCode}, body: ${e.responseBodyAsString}")
+                HttpStatus.UNPROCESSABLE_ENTITY -> throw UnprocessableEntityException(errorMessage)
+                HttpStatus.BAD_REQUEST -> throw BadRequestException(errorMessage)
+                else -> throw IllegalArgumentException(errorMessage)
             }
         }
     }
