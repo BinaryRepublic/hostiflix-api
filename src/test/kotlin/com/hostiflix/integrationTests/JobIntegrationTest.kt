@@ -29,12 +29,12 @@ class JobIntegrationTest: BaseIntegrationTest() {
         RestAssured
             .given()
             .header("Access-Token", accessToken)
-            .put("/${job.id}/status/${newStatus.toString()}")
+            .put("/${job.id}/status/${newStatus}")
             .then()
             .log().ifValidationFails()
             .statusCode(HttpStatus.NO_CONTENT.value())
 
-        val resultingJob = jobRepository.findById(job.id!!).get()
+        val resultingJob = jobRepository.findById(job.id).get()
         assertThat(resultingJob.status).isEqualTo(JobStatus.DEPLOYMENT_SUCCESSFUL)
     }
 

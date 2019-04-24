@@ -27,7 +27,7 @@ class GithubIntegrationTest: BaseIntegrationTest() {
         val project = projectRepository.save(
             MockData.project("1").apply {
                 val project = this
-                repositoryOwner = githubWebhookResponseDto.repository.owner.name
+                repositoryOwner = githubWebhookResponseDto.repository.owner.login
                 repositoryName = githubWebhookResponseDto.repository.name
                 customerId = testCustomer!!.id
                 branches = listOf(branch.apply { this.project = project })
@@ -55,7 +55,7 @@ class GithubIntegrationTest: BaseIntegrationTest() {
         val githubWebhookResponseDto = MockData.githubWebhookResponseDto()
         projectRepository.save(
             MockData.project("1").apply {
-                repositoryOwner = githubWebhookResponseDto.repository.owner.name
+                repositoryOwner = githubWebhookResponseDto.repository.owner.login
                 repositoryName = githubWebhookResponseDto.repository.name
                 customerId = testCustomer!!.id
             }
