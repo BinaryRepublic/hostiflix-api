@@ -39,6 +39,7 @@ class AuthenticationService (
             .replace("{environment}", environment.toString())
     }
 
+    // INSERT INTO github_login_state VALUES (newState.id)
     fun createAndStoreNewGithubState() : String {
         val newState = GithubLoginState()
 
@@ -57,6 +58,8 @@ class AuthenticationService (
             .build().toUriString()
     }
 
+    // SELECT CASE WHEN EXISTS (SELECT * FROM github_login_state WHERE id=state) THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT)END;
+    // DELETE FROM github_login_state WHERE id=state
     fun authenticateOnGithubAndReturnAccessToken(code : String, state : String) : String? {
         if (!githubLoginStateRepository.existsById(state)) {
             return null
@@ -84,6 +87,8 @@ class AuthenticationService (
         customerService.createCustomer(newCustomer)
     }
 
+    // SELECT * FROM auth_credentials;
+    // UPDATE auth_credentials SET latest=it.latest WHERE id=it.id
     fun setAllExistingAccessTokensToLatestFalse() {
         val listOfAuthCredentials = authCredentialsRepository.findAll()
         listOfAuthCredentials.forEach {
@@ -92,6 +97,7 @@ class AuthenticationService (
         }
     }
 
+    // INSERT INTO auth_credentials VALUES (newAuthCredentials.id, newAuthCredentials.githubAccessToken, newAuthCredentials.customerId, newAuthCredentials.latest);
     fun createAndStoreNewAuthCredentials(githubId: String, accessToken: String?) {
         val customer = customerService.findCustomerByGithubId(githubId)
         val newAuthCredentials = AuthCredentials(null, accessToken!!, customer.id!!,  true)

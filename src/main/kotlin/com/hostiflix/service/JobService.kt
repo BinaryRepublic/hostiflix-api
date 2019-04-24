@@ -10,6 +10,8 @@ import java.time.Instant
 class JobService (
     private val jobRepository: JobRepository
 ) {
+    // SELECT * FROM job WHERE id=id;
+    // UPDATE job SET status=job.status WHERE id=job.id
     fun updateJobStatusById(id: String, status: JobStatus): Job? {
         val job = jobRepository.findById(id).takeIf { it.isPresent }?.get() ?: return null
         job.status = status
