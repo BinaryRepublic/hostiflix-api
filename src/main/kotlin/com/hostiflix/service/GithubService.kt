@@ -17,25 +17,33 @@ class GithubService (
     private val githubWs: GithubWs
 ) {
     fun filterWebHooksAndTriggerDeployment(githubWebhookResponseDto: GithubWebhookResponseDto) : HttpStatus {
-        val webhookBranch = githubWebhookResponseDto.ref?.removePrefix("refs/heads/")
-        val project = projectRepository.findByRepositoryOwnerAndRepositoryName(githubWebhookResponseDto.repository.owner.name, githubWebhookResponseDto.repository.name)!!
-        val branch = webhookBranch?.let { webhookBranch -> project.branches.firstOrNull { it.name == webhookBranch } }
 
-        return if (branch != null){
+        val project = projectRepository.findByRepositoryOwnerAndRepositoryName(githubWebhookResponseDto.repository.owner.login, githubWebhookResponseDto.repository.name)!!
+
+        var branches = if (githubWebhookResponseDto.ref != null) {
+            val webhookBranch = githubWebhookResponseDto.ref.removePrefix("refs/heads/")
+            webhookBranch.let { webhookBranch -> project.branches.filter { it.name == webhookBranch } }
+        } else {
+            project.branches
+        }
+
+        return if (branches.isNotEmpty()){
             val startCode = project.startCode
             val buildCode = project.buildCode
             val token = authenticationService.findAuthCredentialsByCustomerId(project.customerId!!).githubAccessToken
-            val gitRepo = githubWebhookResponseDto.repository.url.removePrefix("https://")
-            val subDomain = branch.subDomain
+            val gitRepo = githubWebhookResponseDto.repository.html_url.removePrefix("https://")
 
-            val deploymentServiceRequestDto = DeploymentServiceRequestDto(startCode, buildCode, token, gitRepo, subDomain)
+            for (branch in branches) {
+                val subDomain = branch.subDomain
+                val deploymentServiceRequestDto = DeploymentServiceRequestDto(startCode, buildCode, token, gitRepo, subDomain)
+                val deploymentServiceResponse = deploymentWs.postWebhook(deploymentServiceRequestDto)
 
-            val deploymentServiceResponse = deploymentWs.postWebhook(deploymentServiceRequestDto)
+                branch.jobs.add(
+                    Job(deploymentServiceResponse.id, deploymentServiceResponse.status)
+                        .apply { this.branch = branch }
+                )
+            }
 
-            branch.jobs.add(
-                Job(deploymentServiceResponse.id, deploymentServiceResponse.status)
-                    .apply { this.branch = branch }
-            )
             projectRepository.save(project)
 
             HttpStatus.ACCEPTED
