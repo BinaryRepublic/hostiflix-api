@@ -94,14 +94,14 @@ object MockData {
     private fun githubWebhookResponseRepoDto() : GithubWebhookResponseRepoDto {
         return GithubWebhookResponseRepoDto(
             name = "name",
-            url = "https://url",
+            html_url= "https://url",
             owner = githubWebhookReposponseRepoOwnerDto()
         )
     }
 
     private fun githubWebhookReposponseRepoOwnerDto() : GithubWebhookReponseRepoOwnerDto {
         return GithubWebhookReponseRepoOwnerDto(
-            name = "name"
+            login = "name"
         )
     }
 

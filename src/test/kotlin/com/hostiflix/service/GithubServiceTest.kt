@@ -42,7 +42,7 @@ class GithubServiceTest {
         val authCredentials = MockData.authCredentials("1")
         val deploymentServiceRequestDto = MockData.deploymentServiceRequestDto("1")
         val deploymentServiceResponse = DeploymentServiceResponseDto("1", JobStatus.BUILD_SCHEDULED)
-        given(projectRepository.findByRepositoryOwnerAndRepositoryName(githubWebhookResponseDto.repository.owner.name, githubWebhookResponseDto.repository.name)).willReturn(project)
+        given(projectRepository.findByRepositoryOwnerAndRepositoryName(githubWebhookResponseDto.repository.owner.login, githubWebhookResponseDto.repository.name)).willReturn(project)
         given(authenticationService.findAuthCredentialsByCustomerId(project.customerId!!)).willReturn(authCredentials)
         given(deploymentWsImpl.postWebhook(com.nhaarman.mockito_kotlin.check {
             assertThat(it).isEqualToComparingFieldByFieldRecursively(deploymentServiceRequestDto)
@@ -61,7 +61,7 @@ class GithubServiceTest {
         /* Given */
         val githubWebhookResponseDto = MockData.githubWebhookResponseDto()
         val project = MockData.project("1")
-        given(projectRepository.findByRepositoryOwnerAndRepositoryName(githubWebhookResponseDto.repository.owner.name, githubWebhookResponseDto.repository.name)).willReturn(project)
+        given(projectRepository.findByRepositoryOwnerAndRepositoryName(githubWebhookResponseDto.repository.owner.login, githubWebhookResponseDto.repository.name)).willReturn(project)
 
         /* When */
         val returnedHttpStatus = githubService.filterWebHooksAndTriggerDeployment(githubWebhookResponseDto)
