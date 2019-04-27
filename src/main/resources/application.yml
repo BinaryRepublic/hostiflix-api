@@ -1,4 +1,4 @@
-noAccessTokenRequiredEndpoints: /auth, /github/webhook
+noAccessTokenRequiredEndpoints: /auth, /github/webhook, /jobs
 
 hostiflix-login-redirect:
   prod: https://hostiflix.com/github-redirect
