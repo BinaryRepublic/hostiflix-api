@@ -118,10 +118,10 @@ class ProjectIntegrationTest: BaseIntegrationTest() {
             .body("buildCode", `is`(newProject.buildCode))
             .body("branches[0].name", `is`(newProject.branches[0].name))
             .body("branches[0].subDomain", `is`(newProject.branches[0].subDomain))
-            .body("branches[0].jobs", nullValue())
+            .body("branches[0].jobs", `is`(emptyList<String>()))
             .body("branches[1].name", `is`(newProject.branches[1].name))
             .body("branches[1].subDomain", `is`(newProject.branches[1].subDomain))
-            .body("branches[1].jobs", nullValue())
+            .body("branches[1].jobs", `is`(emptyList<String>()))
 
         val projectList = projectRepository.findAll().toList()
         val project = projectList.first()

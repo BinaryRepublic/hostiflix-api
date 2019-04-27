@@ -21,7 +21,7 @@ class JsonConfig : WebMvcConfigurer {
         builder.featuresToDisable(MapperFeature.USE_GETTERS_AS_SETTERS)
         builder.featuresToEnable(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
         builder.featuresToEnable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
-        builder.serializationInclusion(JsonInclude.Include.NON_EMPTY)
+        builder.serializationInclusion(JsonInclude.Include.NON_NULL)
         return builder
     }
 }
