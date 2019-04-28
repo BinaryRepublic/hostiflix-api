@@ -132,6 +132,7 @@ object MockData {
             "buildCode_$testId",
             "githubAccessToken_$testId",
             "url",
+            "name_$testId",
             "subDomain_$testId"
         )
     }

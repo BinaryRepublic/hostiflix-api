@@ -5,5 +5,6 @@ data class DeploymentServiceRequestDto (
     val buildCode : String,
     val token : String,
     val gitRepo : String,
+    val branch: String,
     val subDomain : String
 )
