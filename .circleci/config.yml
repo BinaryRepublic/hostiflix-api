@@ -53,8 +53,7 @@ jobs:
       - run:
           name: build from dockerfile
           command: |
-            docker build -t eu.gcr.io/${GCLOUD_PROJECT_ID}/api .
-            docker tag eu.gcr.io/${GCLOUD_PROJECT_ID}/api eu.gcr.io/${GCLOUD_PROJECT_ID}/api:$CIRCLE_SHA1
+            docker build -t eu.gcr.io/${GCLOUD_PROJECT_ID}/api:$CIRCLE_SHA1 .
       - run:
           name: push to gcr
           command: |
