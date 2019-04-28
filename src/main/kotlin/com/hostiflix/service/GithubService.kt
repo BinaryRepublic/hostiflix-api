@@ -35,7 +35,8 @@ class GithubService (
 
             for (branch in branches) {
                 val subDomain = branch.subDomain
-                val deploymentServiceRequestDto = DeploymentServiceRequestDto(startCode, buildCode, token, gitRepo, subDomain)
+                val branchName = branch.name
+                val deploymentServiceRequestDto = DeploymentServiceRequestDto(startCode, buildCode, token, gitRepo, branchName, subDomain)
                 val deploymentServiceResponse = deploymentWs.postWebhook(deploymentServiceRequestDto)
 
                 branch.jobs.add(
