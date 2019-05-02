@@ -15,4 +15,7 @@ interface AuthCredentialsRepository : CrudRepository<AuthCredentials, String> {
 
     // SELECT * FROM auth_credentials WHERE github_access_token=githubAccessToken;
     fun findByGithubAccessToken(githubAccessToken : String) : AuthCredentials?
+
+    // SELECT * FROM auth_credentials WHERE customer_id=customerId;
+    fun findAllByCustomerId(customerId: String) : List<AuthCredentials>
 }
