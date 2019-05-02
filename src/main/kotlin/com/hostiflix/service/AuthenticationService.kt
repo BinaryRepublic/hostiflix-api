@@ -98,8 +98,8 @@ class AuthenticationService (
     }
 
     // INSERT INTO auth_credentials VALUES (newAuthCredentials.id, newAuthCredentials.githubAccessToken, newAuthCredentials.customerId, newAuthCredentials.latest);
-    fun createAndStoreNewAuthCredentials(customerId: String, accessToken: String?) {
-        val newAuthCredentials = AuthCredentials(null, accessToken!!, customerId,  true)
+    fun createAndStoreNewAuthCredentials(customerId: String, accessToken: String) {
+        val newAuthCredentials = AuthCredentials(null, accessToken, customerId,  true)
 
         authCredentialsRepository.save(newAuthCredentials)
     }
