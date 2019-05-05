@@ -83,7 +83,6 @@ class GithubWsImpl(
         } catch (e: HttpStatusCodeException) {
             val errorMessage = "Github webhook creation failed with status code ${e.statusCode}, body: ${e.responseBodyAsString}"
             when (e.statusCode) {
-                HttpStatus.OK -> return
                 HttpStatus.UNPROCESSABLE_ENTITY -> throw UnprocessableEntityException(errorMessage)
                 HttpStatus.BAD_REQUEST -> throw BadRequestException(errorMessage)
                 else -> throw IllegalArgumentException(errorMessage)

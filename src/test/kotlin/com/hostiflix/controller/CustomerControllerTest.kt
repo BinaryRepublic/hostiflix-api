@@ -16,7 +16,6 @@ import org.mockito.Mock
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.MediaType
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import org.springframework.test.web.servlet.MockMvc
@@ -35,9 +34,6 @@ class CustomerControllerTest {
     private lateinit var mockMvc: MockMvc
 
     @Autowired
-    private lateinit var jackson2HttpMessageConverter: MappingJackson2HttpMessageConverter
-
-    @Autowired
     lateinit var objectMapper: ObjectMapper
 
     @Mock
@@ -50,7 +46,6 @@ class CustomerControllerTest {
     fun init() {
         mockMvc = MockMvcBuilders
             .standaloneSetup(customerController)
-            .setMessageConverters(this.jackson2HttpMessageConverter)
             .build()
     }
 

@@ -5,7 +5,7 @@ import org.hibernate.annotations.GenericGenerator
 import javax.persistence.*
 
 @Entity
-class Customer(
+data class Customer(
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
@@ -13,12 +13,13 @@ class Customer(
 	var name: String,
 	var email: String,
 	var githubUsername: String,
-	val githubId: String,
+	val githubId: String
+) {
 	@JsonIgnore
 	@OneToMany(
-		fetch = FetchType.LAZY,
-		mappedBy = "customerId",
-		cascade = [CascadeType.ALL]
+			fetch = FetchType.LAZY,
+			mappedBy = "customerId",
+			cascade = [CascadeType.ALL]
 	)
 	val authCredentials: List<AuthCredentials> = emptyList()
-)
+}
