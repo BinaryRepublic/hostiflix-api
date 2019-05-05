@@ -24,6 +24,6 @@ class JobController (
         if (jobService.updateJobStatusById(id, status) == null) {
             return ResponseEntity.notFound().build<Any>()
         }
-        return ResponseEntity.noContent().build<Any>();
+        return ResponseEntity.noContent().build<Any>()
     }
 }

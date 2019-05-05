@@ -75,8 +75,9 @@ class AuthenticationService (
             createAndStoreNewCustomer(githubCustomer, githubCustomerPrimaryEmail)
         }
 
-        setAllExistingAccessTokensToLatestFalse()
-        createAndStoreNewAuthCredentials(githubCustomer.id, accessToken)
+        val customer = customerService.findCustomerByGithubId(githubCustomer.id)
+        setAllExistingAccessTokensToLatestFalse(customer.id!!)
+        createAndStoreNewAuthCredentials(customer.id!!, accessToken)
 
         return accessToken
     }
@@ -87,10 +88,9 @@ class AuthenticationService (
         customerService.createCustomer(newCustomer)
     }
 
-    // SELECT * FROM auth_credentials;
     // UPDATE auth_credentials SET latest=it.latest WHERE id=it.id
-    fun setAllExistingAccessTokensToLatestFalse() {
-        val listOfAuthCredentials = authCredentialsRepository.findAll()
+    fun setAllExistingAccessTokensToLatestFalse(customerId: String) {
+        val listOfAuthCredentials = authCredentialsRepository.findAllByCustomerId(customerId)
         listOfAuthCredentials.forEach {
             it.latest = false
             authCredentialsRepository.save(it)
@@ -98,9 +98,8 @@ class AuthenticationService (
     }
 
     // INSERT INTO auth_credentials VALUES (newAuthCredentials.id, newAuthCredentials.githubAccessToken, newAuthCredentials.customerId, newAuthCredentials.latest);
-    fun createAndStoreNewAuthCredentials(githubId: String, accessToken: String?) {
-        val customer = customerService.findCustomerByGithubId(githubId)
-        val newAuthCredentials = AuthCredentials(null, accessToken!!, customer.id!!,  true)
+    fun createAndStoreNewAuthCredentials(customerId: String, accessToken: String) {
+        val newAuthCredentials = AuthCredentials(null, accessToken, customerId,  true)
 
         authCredentialsRepository.save(newAuthCredentials)
     }

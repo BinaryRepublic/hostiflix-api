@@ -7,7 +7,6 @@ import io.restassured.http.ContentType
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.hasSize
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.springframework.http.HttpStatus

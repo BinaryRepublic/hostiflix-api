@@ -19,7 +19,7 @@ class ProjectService (
 ) {
 
     fun findAllProjectsByAccessToken(accessToken: String): List<Project> {
-        return projectRepository.findAllByCustomerId(getCustomerId(accessToken)).toList()
+        return projectRepository.findAllByCustomerIdOrderByName(getCustomerId(accessToken)).toList()
     }
 
     fun findProjectByIdAndAccessToken(id: String, accessToken: String): Project? {
@@ -36,7 +36,7 @@ class ProjectService (
         return projectRepository.save(project)
     }
 
-    // SELECT * project_hash WHERE id=hash;
+    // SELECT * FROM project_hash WHERE id=hash;
     @Transactional
     fun createProject(newProject: Project, accessToken: String) : Project {
         val projectHash = newProject.assignHash?.let { hash ->

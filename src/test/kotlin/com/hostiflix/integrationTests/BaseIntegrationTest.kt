@@ -20,30 +20,8 @@ import org.springframework.test.context.junit4.SpringRunner
 @RunWith(SpringRunner::class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-//@ContextConfiguration(initializers = [BaseIntegrationTest.Initializer::class])
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 abstract class BaseIntegrationTest {
-
-//    TODO: make testcontainers work in CircleCI
-//    companion object {
-//        @ClassRule
-//        @JvmField
-//        var postgreSQLContainer: PostgreSQLContainer<*> = KPostgreSQLContainer()
-//            .withPassword("password")
-//            .withUsername("postgres")
-//    }
-//
-//    object Initializer : ApplicationContextInitializer<ConfigurableApplicationContext> {
-//        override fun initialize(configurableApplicationContext: ConfigurableApplicationContext) {
-//            val jdbcUrl = postgreSQLContainer.getJdbcUrl()
-//            val values = TestPropertyValues.of(
-//                    "spring.datasource.url=$jdbcUrl",
-//                    "spring.datasource.password=" + BaseIntegrationTest.postgreSQLContainer.getPassword(),
-//                    "spring.datasource.username=" + BaseIntegrationTest.postgreSQLContainer.getUsername()
-//            )
-//            values.applyTo(configurableApplicationContext)
-//        }
-//    }
 
     @Value("\${local.server.port}")
     val serverPort: Int = 0
