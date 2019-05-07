@@ -30,13 +30,11 @@ class ProjectService (
         return projectRepository.existsByIdAndCustomerId(id, getCustomerId(accessToken))
     }
 
-    // INSERT INTO project VALUES (project.id, project.customerId, project.name ...);
     fun saveProject(project: Project, accessToken: String): Project {
         project.customerId = getCustomerId(accessToken)
         return projectRepository.save(project)
     }
 
-    // SELECT * FROM project_hash WHERE id=hash;
     @Transactional
     fun createProject(newProject: Project, accessToken: String) : Project {
         val projectHash = newProject.assignHash?.let { hash ->
@@ -51,7 +49,6 @@ class ProjectService (
         return createdProject
     }
 
-    // SELECT * FROM project WHERE id=newProject.id);
     fun updateProject(newProject: Project, accessToken: String): Project {
         val currentProject = projectRepository.findById(newProject.id!!).get()
         newProject.branches.forEach { updatedBranch ->
@@ -62,11 +59,8 @@ class ProjectService (
         return saveProject(newProject, accessToken)
     }
 
-    // DELETE FROM project WHERE id=id;
     fun deleteProject(id: String) = projectRepository.deleteById(id)
 
-    // SELECT CASE WHEN EXISTS ( SELECT * FROM project_hash WHERE id=randomHash) THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT)END;
-    // INSERT INTO project_hash (ProjectHash(randomHash)
     fun createProjectHash(): String {
         var randomHash: String?
         do {
