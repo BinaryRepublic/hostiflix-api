@@ -23,10 +23,9 @@ class GithubWsImpl(
 ): GithubWs {
 
     override fun getAccessToken(code: String, state: String) : String {
-        val url = githubConfig.loginBase + githubConfig.loginGetAccessToken
 
         val response = restTemplate.exchange(
-            url,
+            githubConfig.loginBase + githubConfig.loginGetAccessToken,
             HttpMethod.POST,
             null,
             GithubAccessTokenDto::class.java,
