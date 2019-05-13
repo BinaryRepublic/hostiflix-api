@@ -35,6 +35,7 @@ class AuthFilter (
 
         val accessToken : String? = request.getHeader("Access-Token")
         val path = request.servletPath
+        // SE_03 functional concepts & lambda & nullable
         val isAuthenticated = accessToken?.takeIf { authenticationService.isAuthenticated(it) } != null
         val skipAuthentication = !noAccessTokenRequiredEndpoints.firstOrNull{ path.startsWith(it) }.isNullOrEmpty()
 

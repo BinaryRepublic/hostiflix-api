@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus
 class AuthenticationIntegrationTest: BaseIntegrationTest() {
 
     @Before
+    // SE_03 dynamic dispatch
     override fun globalSetUp() {
         RestAssured.port = serverPort
         RestAssured.basePath = "/auth"

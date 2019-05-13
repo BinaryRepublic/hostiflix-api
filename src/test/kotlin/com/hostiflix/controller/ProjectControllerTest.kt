@@ -63,7 +63,7 @@ class ProjectControllerTest {
         val project2 = MockData.project("2")
         val projectList = listOf(project1, project2)
         val accessToken = "accessToken"
-        given(projectService.findAllProjectsByAccessToken(accessToken)).willReturn(projectList)
+        given(projectService.findAllProjectsByAccessTokenAndFilter(eq(accessToken), any())).willReturn(projectList)
 
         /* When, Then */
         mockMvc

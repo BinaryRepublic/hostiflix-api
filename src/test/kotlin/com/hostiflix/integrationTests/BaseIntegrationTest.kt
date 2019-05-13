@@ -21,6 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+// SE_03 abstract classes
 abstract class BaseIntegrationTest {
 
     @Value("\${local.server.port}")
@@ -68,6 +69,7 @@ abstract class BaseIntegrationTest {
     }
 
     fun saveTestCustomerWithAuthCredentials(customerId: String, accessToken: String): Customer {
+        // SE_03 type inference
         val customer = customerRepository.save(MockData.customer("c1"))
         authCredentialsRepository.save(AuthCredentials("ac1", accessToken, customer.id!!,  true))
         return customer

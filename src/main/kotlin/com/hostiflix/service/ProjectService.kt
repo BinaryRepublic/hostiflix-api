@@ -1,5 +1,6 @@
 package com.hostiflix.service
 
+import com.hostiflix.dto.ProjectFilterDto
 import com.hostiflix.entity.Project
 import com.hostiflix.entity.ProjectHash
 import com.hostiflix.repository.ProjectHashRepository
@@ -18,8 +19,13 @@ class ProjectService (
     private val authenticationService: AuthenticationService
 ) {
 
-    fun findAllProjectsByAccessToken(accessToken: String): List<Project> {
-        return projectRepository.findAllByCustomerIdOrderByName(getCustomerId(accessToken)).toList()
+    fun findAllProjectsByAccessTokenAndFilter(accessToken: String, projectFilterDto: ProjectFilterDto): List<Project> {
+        val customerId = getCustomerId(accessToken)
+        val spec = ProjectSpecificationBuilder()
+                .withCustomerId(customerId)
+                .withFilter(projectFilterDto)
+                .build()
+        return projectRepository.findAll(spec).toList()
     }
 
     fun findProjectByIdAndAccessToken(id: String, accessToken: String): Project? {

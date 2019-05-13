@@ -1,10 +1,12 @@
 package com.hostiflix.controller
 
+import com.hostiflix.dto.ProjectFilterDto
 import com.hostiflix.entity.Project
 import com.hostiflix.service.ProjectService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
+// SE_03 annotations & reflection
 @RestController
 @RequestMapping("/projects")
 class ProjectController(
@@ -14,9 +16,10 @@ class ProjectController(
     @GetMapping
     fun findAll(
         @RequestHeader("Access-Token")
-        accessToken: String
+        accessToken: String,
+        projectFilterDto: ProjectFilterDto
     ): ResponseEntity<*> {
-        val projectList = projectService.findAllProjectsByAccessToken(accessToken)
+        val projectList = projectService.findAllProjectsByAccessTokenAndFilter(accessToken, projectFilterDto)
 
         return ResponseEntity.ok().body(hashMapOf("projects" to projectList))
     }
